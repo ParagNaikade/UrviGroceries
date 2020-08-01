@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : BaseApiController
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
