@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Business;
 using Contracts.Interfaces;
+using Contracts.Models;
 using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +27,9 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<DbConfig>(Configuration.GetSection("DbConfig"));
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddEntityFrameworkSqlServer().AddDbContext<UrviContext>();
 
             services.AddCors();
             services.AddControllers();
@@ -40,9 +43,9 @@ namespace WebApi
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        ValidIssuer = Configuration["AppSettings:Jwt:Issuer"],
+                        ValidAudience = Configuration["AppSettings:Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AppSettings:Jwt:Key"]))
                     };
                 });
 
@@ -50,7 +53,7 @@ namespace WebApi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddSingleton<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,14 +6,14 @@ using System.Security.Claims;
 using System.Text;
 using Contracts.Interfaces;
 using Contracts.Models;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Business
 {
     public class UserService : IUserService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IOptions<AppSettings> _appSettings;
 
         private List<User> _users = new List<User>
         {
@@ -21,9 +21,9 @@ namespace Business
         };
 
 
-        public UserService(IConfiguration configuration)
+        public UserService(IOptions<AppSettings> appSettings)
         {
-            _configuration = configuration;
+            _appSettings = appSettings;
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
@@ -55,7 +55,7 @@ namespace Business
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Value.Jwt.Key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),

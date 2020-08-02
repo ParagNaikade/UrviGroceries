@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Contracts.Models;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

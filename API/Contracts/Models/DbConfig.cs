@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataAccessLayer
+﻿namespace Contracts.Models
 {
     public class DbConfig
     {
