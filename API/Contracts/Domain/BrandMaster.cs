@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Domain
+namespace Contracts.Domain
 {
-    public partial class CategoryMaster
+    public class BrandMaster
     {
-        public CategoryMaster()
+        public BrandMaster()
         {
             ProductMaster = new HashSet<ProductMaster>();
         }

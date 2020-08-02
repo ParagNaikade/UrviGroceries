@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Domain
+namespace Contracts.Domain
 {
     public partial class ProductMaster
     {

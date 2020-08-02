@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace Contracts.Domain
 {
     public class Product
     {

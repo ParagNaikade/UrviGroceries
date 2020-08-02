@@ -1,6 +1,6 @@
 ﻿using System.Text;
+using Contracts.Domain;
 using Contracts.Models;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -8,16 +8,16 @@ namespace DataAccessLayer
 {
     public class UrviContext : DbContext
     {
-        private readonly IOptions<DbConfig> _dbConfig;
+        private readonly IOptions<AppSettings> _appSettings;
 
         public UrviContext()
         {
         }
 
-        public UrviContext(IOptions<DbConfig> dbConfig, DbContextOptions<UrviContext> options)
+        public UrviContext(IOptions<AppSettings> appSettings, DbContextOptions<UrviContext> options)
             : base(options)
         {
-            _dbConfig = dbConfig;
+            _appSettings = appSettings;
         }
 
         public virtual DbSet<AllergenMaster> AllergenMaster { get; set; }
@@ -162,13 +162,13 @@ namespace DataAccessLayer
             var connectionString = new StringBuilder();
 
             connectionString.Append("User ID=");
-            connectionString.Append(_dbConfig.Value.UserId);
+            connectionString.Append(_appSettings.Value.DbConfig.UserId);
             connectionString.Append(";Password=");
-            connectionString.Append(_dbConfig.Value.Password);
+            connectionString.Append(_appSettings.Value.DbConfig.Password);
             connectionString.Append(";Data Source=");
-            connectionString.Append(_dbConfig.Value.Server);
+            connectionString.Append(_appSettings.Value.DbConfig.Server);
             connectionString.Append(";Initial Catalog=");
-            connectionString.Append(_dbConfig.Value.Database);
+            connectionString.Append(_appSettings.Value.DbConfig.Database);
 
             return connectionString.ToString();
         }

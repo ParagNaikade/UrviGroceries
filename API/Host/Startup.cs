@@ -29,10 +29,13 @@ namespace WebApi
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
-            services.AddEntityFrameworkSqlServer().AddDbContext<UrviContext>();
+            services.AddMemoryCache();
+
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<UrviContext>((provider, builder) => { }, ServiceLifetime.Singleton);
 
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -53,7 +56,9 @@ namespace WebApi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<IUserService, UserService>();
+
+            services.AddSingleton<IConfigCache, ConfigCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
