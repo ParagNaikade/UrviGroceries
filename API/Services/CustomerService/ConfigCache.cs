@@ -21,7 +21,6 @@ namespace Business
             _memoryCache = memoryCache;
         }
 
-
         public async Task<List<ProductMaster>> GetProductsByBrandAsync(int brandId)
         {
             return await _memoryCache.GetOrCreateAsync($"ProductsByBrand#{brandId}", entry =>

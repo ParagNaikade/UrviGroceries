@@ -31,8 +31,7 @@ namespace WebApi
 
             services.AddMemoryCache();
 
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<UrviContext>((provider, builder) => { }, ServiceLifetime.Singleton);
+            services.AddEntityFrameworkSqlServer().AddDbContext<UrviContext>();
 
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -56,9 +55,9 @@ namespace WebApi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddSingleton<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
 
-            services.AddSingleton<IConfigCache, ConfigCache>();
+            services.AddScoped<IConfigCache, ConfigCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
