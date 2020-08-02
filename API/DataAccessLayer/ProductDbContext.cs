@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public class CustomerDbContext : DbContext
+    public class ProductDbContext : DbContext
     {
-        public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
+        public ProductDbContext(DbContextOptions<ProductDbContext> options)
                     : base(options)
         {
         }

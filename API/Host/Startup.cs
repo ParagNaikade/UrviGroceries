@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Business;
 using Contracts.Interfaces;
+using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,8 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<DbConfig>(Configuration.GetSection("DbConfig"));
+
             services.AddCors();
             services.AddControllers();
 
@@ -48,7 +51,6 @@ namespace WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<ErrorHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +77,6 @@ namespace WebApi
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<JwtMiddleware>();
             app.UseEndpoints(x => x.MapControllers());
         }
