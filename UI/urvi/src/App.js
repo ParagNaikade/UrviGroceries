@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './Landing Page/Home/Cart.css'
+import Home from './Landing Page/Home/Home.js';
+import Bag from './Landing Page/Home/ShoppingBag.jpg';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <html>
+    <div>
+      <header>
+        <h1>Urvi Groceries</h1>
+        <img class='GetCart' src={Bag} alt='ShopNow!'></img>
+        <Home></Home>
+       
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          <h3>This is the landing page.</h3>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
+    <span class='PhotoCredits'>Background Image by <a href="https://unsplash.com/@danaragonmx?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Dan Aragón</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+    <span class='PhotoCredits'>Cart Photo by <a href="https://unsplash.com/@ciabattespugnose?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Lucrezia Carnelos</a> on <a href="https://unsplash.com/s/photos/shopping-bag?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+    </html>
   );
 }
 

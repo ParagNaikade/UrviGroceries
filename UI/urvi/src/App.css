@@ -1,3 +1,12 @@
+html{
+  background: url('./Landing Page/Home/LandingPageBackground.png') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;  
+}
+
+
 .App {
   text-align: center;
 }
@@ -26,6 +35,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+
+.PhotoCredits {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  background:rgb(156, 211, 238);
 }
 
 @keyframes App-logo-spin {
