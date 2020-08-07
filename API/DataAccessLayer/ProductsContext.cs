@@ -1,20 +1,19 @@
-﻿using System.Text;
-using Contracts.Domain;
+﻿using Contracts.Domain;
 using Contracts.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace DataAccessLayer
 {
-    public class UrviContext : DbContext
+    public class ProductsContext : DbContext
     {
         private readonly IOptions<AppSettings> _appSettings;
 
-        public UrviContext()
+        public ProductsContext()
         {
         }
 
-        public UrviContext(IOptions<AppSettings> appSettings, DbContextOptions<UrviContext> options)
+        public ProductsContext(IOptions<AppSettings> appSettings, DbContextOptions<ProductsContext> options)
             : base(options)
         {
             _appSettings = appSettings;
@@ -28,7 +27,7 @@ namespace DataAccessLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(GetConnectionString());
+            optionsBuilder.UseSqlServer(ConnectionStringsHelper.GetConnectionString(_appSettings.Value));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -157,20 +156,6 @@ namespace DataAccessLayer
             });
         }
 
-        private string GetConnectionString()
-        {
-            var connectionString = new StringBuilder();
-
-            connectionString.Append("User ID=");
-            connectionString.Append(_appSettings.Value.DbConfig.UserId);
-            connectionString.Append(";Password=");
-            connectionString.Append(_appSettings.Value.DbConfig.Password);
-            connectionString.Append(";Data Source=");
-            connectionString.Append(_appSettings.Value.DbConfig.Server);
-            connectionString.Append(";Initial Catalog=");
-            connectionString.Append(_appSettings.Value.DbConfig.Database);
-
-            return connectionString.ToString();
-        }
+        
     }
 }

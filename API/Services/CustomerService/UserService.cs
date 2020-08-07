@@ -14,10 +14,12 @@ namespace Business
     public class UserService : IUserService
     {
         private readonly IOptions<AppSettings> _appSettings;
+        private User _loggedInUser;
 
         private List<User> _users = new List<User>
         {
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
+            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test", Email = "test@gmail.com" },
+            new User { Id = 2, FirstName = "Test2", LastName = "User2", Username = "test2", Password = "test", Email = "test2@gmail.com" }
         };
 
 
@@ -47,6 +49,16 @@ namespace Business
         public User GetById(int id)
         {
             return _users.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void SetLoggedInUser(User user)
+        {
+            _loggedInUser = user;
+        }
+
+        public User GetLoggedInUser()
+        {
+            return _loggedInUser;
         }
 
         // helper methods

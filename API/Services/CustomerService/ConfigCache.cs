@@ -12,10 +12,10 @@ namespace Business
 {
     public class ConfigCache : IConfigCache
     {
-        private readonly UrviContext _urviContext;
+        private readonly ProductsContext _urviContext;
         private readonly IMemoryCache _memoryCache;
 
-        public ConfigCache(UrviContext urviContext, IMemoryCache memoryCache)
+        public ConfigCache(ProductsContext urviContext, IMemoryCache memoryCache)
         {
             _urviContext = urviContext;
             _memoryCache = memoryCache;

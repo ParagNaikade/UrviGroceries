@@ -15,7 +15,7 @@ namespace Contracts.Domain
         public string Description { get; set; }
         public int CategoryId { get; set; }
         public int Quantity { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
         public string Size { get; set; }
         public int BrandId { get; set; }
 
