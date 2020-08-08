@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,7 +32,8 @@ namespace WebApi
 
             services.AddMemoryCache();
 
-            services.AddEntityFrameworkSqlServer().AddDbContext<UrviContext>();
+            services.AddEntityFrameworkSqlServer().AddDbContext<ProductsContext>(options => options.UseLazyLoadingProxies());
+            services.AddEntityFrameworkSqlServer().AddDbContext<OrdersContext>(options => options.UseLazyLoadingProxies());
 
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -58,6 +60,8 @@ namespace WebApi
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IConfigCache, ConfigCache>();
+
+            services.AddScoped<IOrdersBusiness, OrdersBusiness>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

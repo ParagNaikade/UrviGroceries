@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Contracts.Domain;
+﻿using System.Threading.Tasks;
 using Contracts.Interfaces;
-using Contracts.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Authentication;
 
