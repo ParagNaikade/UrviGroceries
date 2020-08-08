@@ -19,7 +19,7 @@ namespace Nop.Web
                 {
                     webBuilder
                         .UseStartup<Startup>();
-                });
+                }).UseWindowsService();
         }
     }
 }
