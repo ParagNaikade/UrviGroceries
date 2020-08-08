@@ -180,7 +180,7 @@ namespace Nop.Services.Gdpr
             {
                 GdprRequestType.ConsentAgree => true,
                 GdprRequestType.ConsentDisagree => false,
-                _ => null,
+                _ => (bool?)null,
             };
         }
         #endregion
