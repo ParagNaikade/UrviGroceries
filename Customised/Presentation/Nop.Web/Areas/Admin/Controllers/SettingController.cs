@@ -14,7 +14,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
@@ -29,7 +28,6 @@ using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -62,7 +60,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEncryptionService _encryptionService;
         private readonly IFulltextService _fulltextService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly INopFileProvider _fileProvider;
@@ -91,7 +88,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEncryptionService encryptionService,
             IFulltextService fulltextService,
             IGenericAttributeService genericAttributeService,
-            IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
             INopFileProvider fileProvider,
@@ -116,7 +112,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _encryptionService = encryptionService;
             _fulltextService = fulltextService;
             _genericAttributeService = genericAttributeService;
-            _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
             _fileProvider = fileProvider;
@@ -133,26 +128,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _uploadService = uploadService;
             _config = config;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        protected virtual void UpdateGdprConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(gdprConsent,
-                    x => x.Message,
-                    localized.Message,
-                    localized.LanguageId);
-
-                _localizedEntityService.SaveLocalizedValue(gdprConsent,
-                    x => x.RequiredMessage,
-                    localized.RequiredMessage,
-                    localized.LanguageId);
-            }
         }
 
         #endregion
@@ -1070,165 +1045,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("CustomerUser");
         }
-
-        #region GDPR
-
-        public virtual IActionResult Gdpr()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _settingModelFactory.PrepareGdprSettingsModel();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult Gdpr(GdprSettingsModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var gdprSettings = _settingService.LoadSetting<GdprSettings>(storeScope);
-            gdprSettings = model.ToSettings(gdprSettings);
-
-            //we do not clear cache after each setting update.
-            //this behavior can increase performance because cached settings will not be cleared 
-            //and loaded from database after each update
-            _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.GdprEnabled, model.GdprEnabled_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogPrivacyPolicyConsent, model.LogPrivacyPolicyConsent_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogNewsletterConsent, model.LogNewsletterConsent_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogUserProfileChanges, model.LogUserProfileChanges_OverrideForStore, storeScope, false);
-
-            //now clear settings cache
-            _settingService.ClearCache();
-
-            //activity log
-            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
-            return RedirectToAction("Gdpr");
-        }
-
-        [HttpPost]
-        public virtual IActionResult GdprConsentList(GdprConsentSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
-
-            //prepare model
-            var model = _settingModelFactory.PrepareGdprConsentListModel(searchModel);
-
-            return Json(model);
-        }
-
-        public virtual IActionResult CreateGdprConsent()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _settingModelFactory.PrepareGdprConsentModel(new GdprConsentModel(), null);
-
-            return View(model);
-        }
-
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateGdprConsent(GdprConsentModel model, bool continueEditing)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            if (ModelState.IsValid)
-            {
-                var gdprConsent = model.ToEntity<GdprConsent>();
-                _gdprService.InsertConsent(gdprConsent);
-
-                //locales                
-                UpdateGdprConsentLocales(gdprConsent, model);
-
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
-
-                return continueEditing ? RedirectToAction("EditGdprConsent", new { gdprConsent.Id }) : RedirectToAction("Gdpr");
-            }
-
-            //prepare model
-            model = _settingModelFactory.PrepareGdprConsentModel(model, null, true);
-
-            //if we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        public virtual IActionResult EditGdprConsent(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get a consent with the specified id
-            var gdprConsent = _gdprService.GetConsentById(id);
-            if (gdprConsent == null)
-                return RedirectToAction("Gdpr");
-
-            //prepare model
-            var model = _settingModelFactory.PrepareGdprConsentModel(null, gdprConsent);
-
-            return View(model);
-        }
-
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditGdprConsent(GdprConsentModel model, bool continueEditing)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get a GDPR consent with the specified id
-            var gdprConsent = _gdprService.GetConsentById(model.Id);
-            if (gdprConsent == null)
-                return RedirectToAction("Gdpr");
-
-            if (ModelState.IsValid)
-            {
-                gdprConsent = model.ToEntity(gdprConsent);
-                _gdprService.UpdateConsent(gdprConsent);
-
-                //locales                
-                UpdateGdprConsentLocales(gdprConsent, model);
-
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
-
-                return continueEditing ? RedirectToAction("EditGdprConsent", gdprConsent.Id) : RedirectToAction("Gdpr");
-            }
-
-            //prepare model
-            model = _settingModelFactory.PrepareGdprConsentModel(model, gdprConsent, true);
-
-            //if we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult DeleteGdprConsent(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //try to get a GDPR consent with the specified id
-            var gdprConsent = _gdprService.GetConsentById(id);
-            if (gdprConsent == null)
-                return RedirectToAction("Gdpr");
-
-            _gdprService.DeleteConsent(gdprConsent);
-
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Deleted"));
-
-            return RedirectToAction("Gdpr");
-        }
-
-        #endregion
 
         public virtual IActionResult GeneralCommon()
         {

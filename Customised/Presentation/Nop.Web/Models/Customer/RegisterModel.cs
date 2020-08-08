@@ -15,7 +15,6 @@ namespace Nop.Web.Models.Customer
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             CustomerAttributes = new List<CustomerAttributeModel>();
-            GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]
@@ -133,10 +132,6 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
         
-        public bool NewsletterEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Newsletter")]
-        public bool Newsletter { get; set; }
-        
         public bool AcceptPrivacyPolicyEnabled { get; set; }
         public bool AcceptPrivacyPolicyPopup { get; set; }
 
@@ -155,7 +150,5 @@ namespace Nop.Web.Models.Customer
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
-
-        public IList<GdprConsentModel> GdprConsents { get; set; }
     }
 }

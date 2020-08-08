@@ -10,7 +10,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
@@ -25,7 +24,6 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -54,7 +52,6 @@ namespace Nop.Web.Controllers
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly IDownloadService _downloadService;
         private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
@@ -70,12 +67,10 @@ namespace Nop.Web.Controllers
         private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
@@ -102,7 +97,6 @@ namespace Nop.Web.Controllers
             DateTimeSettings dateTimeSettings,
             IDownloadService downloadService,
             ForumSettings forumSettings,
-            GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressModelFactory addressModelFactory,
             IAddressService addressService,
@@ -118,12 +112,10 @@ namespace Nop.Web.Controllers
             IEventPublisher eventPublisher,
             IExportManager exportManager,
             IExternalAuthenticationService externalAuthenticationService,
-            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
             ILogger logger,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
@@ -146,7 +138,6 @@ namespace Nop.Web.Controllers
             _dateTimeSettings = dateTimeSettings;
             _downloadService = downloadService;
             _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressModelFactory = addressModelFactory;
             _addressService = addressService;
@@ -162,12 +153,10 @@ namespace Nop.Web.Controllers
             _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _externalAuthenticationService = externalAuthenticationService;
-            _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
             _logger = logger;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
@@ -188,19 +177,6 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Utilities
-
-        protected virtual void ValidateRequiredConsents(List<GdprConsent> consents, IFormCollection form)
-        {
-            foreach (var consent in consents)
-            {
-                var controlId = $"consent{consent.Id}";
-                var cbConsent = form[controlId];
-                if (StringValues.IsNullOrEmpty(cbConsent) || !cbConsent.ToString().Equals("on"))
-                {
-                    ModelState.AddModelError("", consent.RequiredMessage);
-                }
-            }
-        }
 
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
@@ -279,100 +255,6 @@ namespace Nop.Web.Controllers
             }
 
             return attributesXml;
-        }
-
-        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel,
-            CustomerInfoModel newCustomerInfoModel, IFormCollection form)
-        {
-            try
-            {
-                //consents
-                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
-                foreach (var consent in consents)
-                {
-                    var previousConsentValue = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
-                    var controlId = $"consent{consent.Id}";
-                    var cbConsent = form[controlId];
-                    if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
-                    {
-                        //agree
-                        if (!previousConsentValue.HasValue || !previousConsentValue.Value)
-                        {
-                            _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                        }
-                    }
-                    else
-                    {
-                        //disagree
-                        if (!previousConsentValue.HasValue || previousConsentValue.Value)
-                        {
-                            _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                        }
-                    }
-                }
-
-                //newsletter subscriptions
-                if (_gdprSettings.LogNewsletterConsent)
-                {
-                    if (oldCustomerInfoModel.Newsletter && !newCustomerInfoModel.Newsletter)
-                        _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentDisagree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                    if (!oldCustomerInfoModel.Newsletter && newCustomerInfoModel.Newsletter)
-                        _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                }
-
-                //user profile changes
-                if (!_gdprSettings.LogUserProfileChanges)
-                    return;
-
-                if (oldCustomerInfoModel.Gender != newCustomerInfoModel.Gender)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Gender")} = {newCustomerInfoModel.Gender}");
-
-                if (oldCustomerInfoModel.FirstName != newCustomerInfoModel.FirstName)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.FirstName")} = {newCustomerInfoModel.FirstName}");
-
-                if (oldCustomerInfoModel.LastName != newCustomerInfoModel.LastName)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.LastName")} = {newCustomerInfoModel.LastName}");
-
-                if (oldCustomerInfoModel.ParseDateOfBirth() != newCustomerInfoModel.ParseDateOfBirth())
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth()}");
-
-                if (oldCustomerInfoModel.Email != newCustomerInfoModel.Email)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Email")} = {newCustomerInfoModel.Email}");
-
-                if (oldCustomerInfoModel.Company != newCustomerInfoModel.Company)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Company")} = {newCustomerInfoModel.Company}");
-
-                if (oldCustomerInfoModel.StreetAddress != newCustomerInfoModel.StreetAddress)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StreetAddress")} = {newCustomerInfoModel.StreetAddress}");
-
-                if (oldCustomerInfoModel.StreetAddress2 != newCustomerInfoModel.StreetAddress2)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StreetAddress2")} = {newCustomerInfoModel.StreetAddress2}");
-
-                if (oldCustomerInfoModel.ZipPostalCode != newCustomerInfoModel.ZipPostalCode)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.ZipPostalCode")} = {newCustomerInfoModel.ZipPostalCode}");
-
-                if (oldCustomerInfoModel.City != newCustomerInfoModel.City)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.City")} = {newCustomerInfoModel.City}");
-
-                if (oldCustomerInfoModel.County != newCustomerInfoModel.County)
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.County")} = {newCustomerInfoModel.County}");
-
-                if (oldCustomerInfoModel.CountryId != newCustomerInfoModel.CountryId)
-                {
-                    var countryName = _countryService.GetCountryById(newCustomerInfoModel.CountryId)?.Name;
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Country")} = {countryName}");
-                }
-
-                if (oldCustomerInfoModel.StateProvinceId != newCustomerInfoModel.StateProvinceId)
-                {
-                    var stateProvinceName = _stateProvinceService.GetStateProvinceById(newCustomerInfoModel.StateProvinceId)?.Name;
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.StateProvince")} = {stateProvinceName}");
-                }
-            }
-            catch (Exception exception)
-            {
-                _logger.Error(exception.Message, exception, customer);
-            }
         }
 
         #endregion
@@ -727,15 +609,6 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
-            //GDPR
-            if (_gdprSettings.GdprEnabled)
-            {
-                var consents = _gdprService
-                    .GetAllConsents().Where(consent => consent.DisplayDuringRegistration && consent.IsRequired).ToList();
-
-                ValidateRequiredConsents(consents, form);
-            }
-
             if (ModelState.IsValid)
             {
                 if (_customerSettings.UsernamesEnabled && model.Username != null)
@@ -804,83 +677,6 @@ namespace Nop.Web.Controllers
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.PhoneAttribute, model.Phone);
                     if (_customerSettings.FaxEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
-
-                    //newsletter
-                    if (_customerSettings.NewsletterEnabled)
-                    {
-                        //save newsletter value
-                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
-                        if (newsletter != null)
-                        {
-                            if (model.Newsletter)
-                            {
-                                newsletter.Active = true;
-                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
-
-                                //GDPR
-                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                                {
-                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                                }
-                            }
-                            //else
-                            //{
-                            //When registering, not checking the newsletter check box should not take an existing email address off of the subscription list.
-                            //_newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                            //}
-                        }
-                        else
-                        {
-                            if (model.Newsletter)
-                            {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                {
-                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = model.Email,
-                                    Active = true,
-                                    StoreId = _storeContext.CurrentStore.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
-                                });
-
-                                //GDPR
-                                if (_gdprSettings.GdprEnabled && _gdprSettings.LogNewsletterConsent)
-                                {
-                                    _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.Newsletter"));
-                                }
-                            }
-                        }
-                    }
-
-                    if (_customerSettings.AcceptPrivacyPolicyEnabled)
-                    {
-                        //privacy policy is required
-                        //GDPR
-                        if (_gdprSettings.GdprEnabled && _gdprSettings.LogPrivacyPolicyConsent)
-                        {
-                            _gdprService.InsertLog(customer, 0, GdprRequestType.ConsentAgree, _localizationService.GetResource("Gdpr.Consent.PrivacyPolicy"));
-                        }
-                    }
-
-                    //GDPR
-                    if (_gdprSettings.GdprEnabled)
-                    {
-                        var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayDuringRegistration).ToList();
-                        foreach (var consent in consents)
-                        {
-                            var controlId = $"consent{consent.Id}";
-                            var cbConsent = form[controlId];
-                            if (!StringValues.IsNullOrEmpty(cbConsent) && cbConsent.ToString().Equals("on"))
-                            {
-                                //agree
-                                _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentAgree, consent.Message);
-                            }
-                            else
-                            {
-                                //disagree
-                                _gdprService.InsertLog(customer, consent.Id, GdprRequestType.ConsentDisagree, consent.Message);
-                            }
-                        }
-                    }
 
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
@@ -1106,25 +902,12 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            //get customer info model before changes for gdpr log
-            if (_gdprSettings.GdprEnabled & _gdprSettings.LogUserProfileChanges)
-                oldCustomerModel = _customerModelFactory.PrepareCustomerInfoModel(oldCustomerModel, customer, false);
-
             //custom customer attributes
             var customerAttributesXml = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
-            }
-
-            //GDPR
-            if (_gdprSettings.GdprEnabled)
-            {
-                var consents = _gdprService
-                    .GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage && consent.IsRequired).ToList();
-
-                ValidateRequiredConsents(consents, form);
             }
 
             try
@@ -1218,50 +1001,12 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.FaxEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FaxAttribute, model.Fax);
 
-                    //newsletter
-                    if (_customerSettings.NewsletterEnabled)
-                    {
-                        //save newsletter value
-                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                        if (newsletter != null)
-                        {
-                            if (model.Newsletter)
-                            {
-                                var wasActive = newsletter.Active;
-                                newsletter.Active = true;
-                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
-                            }
-                            else
-                            {
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                            }
-                        }
-                        else
-                        {
-                            if (model.Newsletter)
-                            {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                {
-                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.Email,
-                                    Active = true,
-                                    StoreId = _storeContext.CurrentStore.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
-                                });
-                            }
-                        }
-                    }
-
                     if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.SignatureAttribute, model.Signature);
 
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                         NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
-
-                    //GDPR
-                    if (_gdprSettings.GdprEnabled)
-                        LogGdpr(customer, oldCustomerModel, model, form);
 
                     return RedirectToRoute("CustomerInfo");
                 }
@@ -1690,60 +1435,6 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AvatarPictureIdAttribute, 0);
 
             return RedirectToRoute("CustomerAvatar");
-        }
-
-        #endregion
-
-        #region GDPR tools
-
-        [HttpsRequirement]
-        public virtual IActionResult GdprTools()
-        {
-            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
-                return Challenge();
-
-            if (!_gdprSettings.GdprEnabled)
-                return RedirectToRoute("CustomerInfo");
-
-            var model = _customerModelFactory.PrepareGdprToolsModel();
-            return View(model);
-        }
-
-        [HttpPost, ActionName("GdprTools")]
-        [FormValueRequired("export-data")]
-        public virtual IActionResult GdprToolsExport()
-        {
-            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
-                return Challenge();
-
-            if (!_gdprSettings.GdprEnabled)
-                return RedirectToRoute("CustomerInfo");
-
-            //log
-            _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
-
-            //export
-            var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-
-            return File(bytes, MimeTypes.TextXlsx, "customerdata.xlsx");
-        }
-
-        [HttpPost, ActionName("GdprTools")]
-        [FormValueRequired("delete-account")]
-        public virtual IActionResult GdprToolsDelete()
-        {
-            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
-                return Challenge();
-
-            if (!_gdprSettings.GdprEnabled)
-                return RedirectToRoute("CustomerInfo");
-
-            //log
-            _gdprService.InsertLog(_workContext.CurrentCustomer, 0, GdprRequestType.DeleteCustomer, _localizationService.GetResource("Gdpr.DeleteRequested"));
-
-            var model = _customerModelFactory.PrepareGdprToolsModel();
-            model.Result = _localizationService.GetResource("Gdpr.DeleteRequested.Success");
-            return View(model);
         }
 
         #endregion

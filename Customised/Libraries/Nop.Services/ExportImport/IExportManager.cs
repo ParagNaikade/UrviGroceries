@@ -77,25 +77,10 @@ namespace Nop.Services.ExportImport
         string ExportCustomersToXml(IList<Customer> customers);
 
         /// <summary>
-        /// Export newsletter subscribers to TXT
-        /// </summary>
-        /// <param name="subscriptions">Subscriptions</param>
-        /// <returns>Result in TXT (string) format</returns>
-        string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions);
-
-        /// <summary>
         /// Export states to TXT
         /// </summary>
         /// <param name="states">States</param>
         /// <returns>Result in TXT (string) format</returns>
         string ExportStatesToTxt(IList<StateProvince> states);
-
-        /// <summary>
-        /// Export customer info (GDPR request) to XLSX 
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Customer GDPR info</returns>
-        byte[] ExportCustomerGdprInfoToXlsx(Customer customer, int storeId);
     }
 }

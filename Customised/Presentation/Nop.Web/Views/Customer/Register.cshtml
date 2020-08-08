@@ -280,21 +280,13 @@
                     </div>
                 </div>
             }
-            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+            @if (Model.CustomerAttributes.Count > 0)
             {
                 <div class="fieldset">
                     <div class="title">
                         <strong>@T("Account.Options")</strong>
                     </div>
                     <div class="form-fields">
-                        @if (Model.NewsletterEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="Newsletter" asp-postfix=":"></label>
-                                <input asp-for="Newsletter" />
-                                <span asp-validation-for="Newsletter"></span>
-                            </div>
-                        }
                         @if (Model.CustomerAttributes.Count > 0)
                         {
                             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
@@ -345,7 +337,7 @@
                 </div>
             </div>
 
-            @if (Model.AcceptPrivacyPolicyEnabled || Model.GdprConsents.Count > 0)
+            @if (Model.AcceptPrivacyPolicyEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -390,35 +382,6 @@
                                     <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
                                 }
                             </div>
-                        }
-
-                        @if (Model.GdprConsents.Count > 0)
-                        {
-                            foreach (var consent in Model.GdprConsents)
-                            {
-                                if (consent.IsRequired)
-                                {
-                                    <script asp-location="Footer">
-                                    $(document).ready(function() {
-                                        $('#register-button').on('click', function() {
-                                            if ($('#consent@(consent.Id)').is(':checked')) {
-                                                    //do some stuff
-                                                    return true;
-                                                } else {
-                                                    //just show validation errors, don't post
-                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
-                                                    return false;
-                                                }
-                                            });
-                                    });
-                                    </script>
-                                }
-                                <div class="inputs accept-consent">
-                                    <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
-                                    <label for="consent@(consent.Id)">@consent.Message</label>
-                                </div>
-                            }
-
                         }
                     </div>
                 </div>

@@ -293,14 +293,6 @@ namespace Nop.Services.Messages
                     "%RecurringPayment.RecurringPaymentType%"
                 });
 
-                //newsletter subscription tokens
-                _allowedTokens.Add(TokenGroupNames.SubscriptionTokens, new[]
-                {
-                    "%NewsLetterSubscription.Email%",
-                    "%NewsLetterSubscription.ActivationUrl%",
-                    "%NewsLetterSubscription.DeactivationUrl%"
-                });
-
                 //product tokens
                 _allowedTokens.Add(TokenGroupNames.ProductTokens, new[]
                 {
@@ -1216,25 +1208,6 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Add newsletter subscription tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="subscription">Newsletter subscription</param>
-        public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
-        {
-            tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
-
-            var activationUrl = RouteUrl(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "true" });
-            tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
-
-            var deactivationUrl = RouteUrl(routeName: "NewsletterActivation", routeValues: new { token = subscription.NewsLetterSubscriptionGuid, active = "false" });
-            tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
-
-            //event notification
-            _eventPublisher.EntityTokensAdded(subscription, tokens);
-        }
-
-        /// <summary>
         /// Add product review tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
@@ -1513,10 +1486,6 @@ namespace Nop.Services.Messages
                 case MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification:
                 case MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens };
-
-                case MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage:
-                case MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens };
 
                 case MessageTemplateSystemNames.EmailAFriendMessage:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens };

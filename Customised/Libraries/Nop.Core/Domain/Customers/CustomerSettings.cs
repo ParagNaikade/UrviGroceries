@@ -173,26 +173,6 @@ namespace Nop.Core.Domain.Customers
         public CustomerNameFormat CustomerNameFormat { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Newsletter' form field is enabled
-        /// </summary>
-        public bool NewsletterEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Newsletter' checkbox is ticked by default on the registration page
-        /// </summary>
-        public bool NewsletterTickedByDefault { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to hide newsletter box
-        /// </summary>
-        public bool HideNewsletterBlock { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether newsletter block should allow to unsubscribe
-        /// </summary>
-        public bool NewsletterBlockAllowToUnsubscribe { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating the number of minutes for 'online customers' module
         /// </summary>
         public int OnlineCustomerMinutes { get; set; }

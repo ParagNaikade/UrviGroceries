@@ -221,26 +221,6 @@ namespace Nop.Services.Messages
 
         #endregion
 
-        #region Newsletter workflow
-
-        /// <summary>
-        /// Sends a newsletter subscription activation message
-        /// </summary>
-        /// <param name="subscription">Newsletter subscription</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        IList<int> SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription, int languageId);
-
-        /// <summary>
-        /// Sends a newsletter subscription deactivation message
-        /// </summary>
-        /// <param name="subscription">Newsletter subscription</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        IList<int> SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription, int languageId);
-
-        #endregion
-
         #region Send a message to a friend
 
         /// <summary>

@@ -101,13 +101,6 @@ namespace Nop.Services.Messages
         void AddVendorTokens(IList<Token> tokens, Vendor vendor);
 
         /// <summary>
-        /// Add newsletter subscription tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="subscription">Newsletter subscription</param>
-        void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
-
-        /// <summary>
         /// Add product review tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>

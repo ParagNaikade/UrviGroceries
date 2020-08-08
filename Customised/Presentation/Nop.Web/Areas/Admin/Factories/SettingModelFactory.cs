@@ -10,7 +10,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
@@ -25,7 +24,6 @@ using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -37,6 +35,7 @@ using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -56,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
-        private readonly IGdprService _gdprService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -83,7 +81,6 @@ namespace Nop.Web.Areas.Admin.Factories
             INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
-            IGdprService gdprService,
             ILocalizedModelFactory localizedModelFactory,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -106,7 +103,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _fulltextService = fulltextService;
-            _gdprService = gdprService;
             _localizedModelFactory = localizedModelFactory;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -186,22 +182,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Sort option search model</param>
         /// <returns>Sort option search model</returns>
         protected virtual SortOptionSearchModel PrepareSortOptionSearchModel(SortOptionSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare GDPR consent search model
-        /// </summary>
-        /// <param name="searchModel">GDPR consent search model</param>
-        /// <returns>GDPR consent search model</returns>
-        protected virtual GdprConsentSearchModel PrepareGdprConsentSearchModel(GdprConsentSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1344,102 +1324,6 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare nested search models
             _customerAttributeModelFactory.PrepareCustomerAttributeSearchModel(model.CustomerAttributeSearchModel);
             _addressAttributeModelFactory.PrepareAddressAttributeSearchModel(model.AddressAttributeSearchModel);
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare GDPR settings model
-        /// </summary>
-        /// <returns>GDPR settings model</returns>
-        public virtual GdprSettingsModel PrepareGdprSettingsModel()
-        {
-            //load settings for a chosen store scope
-            var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var gdprSettings = _settingService.LoadSetting<GdprSettings>(storeId);
-
-            //fill in model values from the entity
-            var model = gdprSettings.ToSettingsModel<GdprSettingsModel>();
-
-            //fill in additional values (not existing in the entity)
-            model.ActiveStoreScopeConfiguration = storeId;
-
-            //prepare nested search model
-            PrepareGdprConsentSearchModel(model.GdprConsentSearchModel);
-
-            if (storeId <= 0)
-                return model;
-
-            //fill in overridden values
-            model.GdprEnabled_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprEnabled, storeId);
-            model.LogPrivacyPolicyConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
-            model.LogNewsletterConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogNewsletterConsent, storeId);
-            model.LogUserProfileChanges_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogUserProfileChanges, storeId);
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare paged GDPR consent list model
-        /// </summary>
-        /// <param name="searchModel">GDPR search model</param>
-        /// <returns>GDPR consent list model</returns>
-        public virtual GdprConsentListModel PrepareGdprConsentListModel(GdprConsentSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //get sort options
-            var consentList = _gdprService.GetAllConsents().ToPagedList(searchModel);
-
-            //prepare list model
-            var model = new GdprConsentListModel().PrepareToGrid(searchModel, consentList, () =>
-            {
-                return consentList.Select(consent =>
-                {
-                    var gdprConsentModel = consent.ToModel<GdprConsentModel>();
-                    var gdprConsent = _gdprService.GetConsentById(gdprConsentModel.Id);
-                    gdprConsentModel.Message = _localizationService.GetLocalized(gdprConsent, entity => entity.Message);
-                    gdprConsentModel.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage);
-
-                    return gdprConsentModel;
-                });
-            });
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare GDPR consent model
-        /// </summary>
-        /// <param name="model">GDPR consent model</param>
-        /// <param name="gdprConsent">GDPR consent</param>
-        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>GDPR consent model</returns>
-        public virtual GdprConsentModel PrepareGdprConsentModel(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false)
-        {
-            Action<GdprConsentLocalizedModel, int> localizedModelConfiguration = null;
-
-            //fill in model values from the entity
-            if (gdprConsent != null)
-            {
-                model ??= gdprConsent.ToModel<GdprConsentModel>();
-
-                //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
-                {
-                    locale.Message = _localizationService.GetLocalized(gdprConsent, entity => entity.Message, languageId, false, false);
-                    locale.RequiredMessage = _localizationService.GetLocalized(gdprConsent, entity => entity.RequiredMessage, languageId, false, false);
-                };
-            }
-
-            //set default values for the new model
-            if (gdprConsent == null)
-                model.DisplayOrder = 1;
-
-            //prepare localized models
-            if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }

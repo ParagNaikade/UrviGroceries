@@ -54,34 +54,6 @@
                 </button>
                 <nop-action-confirmation asp-button-id="resend-activation-message" />
             }
-            @if (Model.GdprEnabled)
-            {
-                
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success">
-                        <i class="fa fa-download"></i>
-                        @T("Admin.Customers.Customers.Gdpr")
-                    </button>
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">&nbsp;</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a asp-action="GdprExport" asp-route-id="@Model.Id" >
-                                <i class="fa fa-file-code-o"></i>
-                                @T("Admin.Customers.Customers.Gdpr.Export")
-                            </a>
-                        </li>
-                        <li>
-                            <a id="customer-gdpr-delete" href="#">
-                                <i class="fa fa-trash-o"></i>
-                                @T("Admin.Customers.Customers.Gdpr.Delete")
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            }
             <span id="customer-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
@@ -92,10 +64,6 @@
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="customer-delete" />
-@if (Model.GdprEnabled)
-{
-    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="GdprDelete" asp-button-id="customer-gdpr-delete" />
-}
 
 @*send email form*@
 <div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">

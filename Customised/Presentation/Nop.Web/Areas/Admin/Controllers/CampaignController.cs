@@ -29,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -46,7 +45,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEmailAccountService emailAccountService,
             ILocalizationService localizationService,
             INotificationService notificationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IPermissionService permissionService,
             IStoreContext storeContext,
             IStoreService storeService)
@@ -59,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _emailAccountService = emailAccountService;
             _localizationService = localizationService;
             _notificationService = notificationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _permissionService = permissionService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -230,62 +227,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var emailAccount = GetEmailAccount(model.EmailAccountId);
-                var subscription = _newsLetterSubscriptionService
-                    .GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
-                if (subscription != null)
-                {
-                    //there's a subscription. let's use it
-                    _campaignService.SendCampaign(campaign, emailAccount, new List<NewsLetterSubscription> { subscription });
-                }
-                else
-                {
-                    //no subscription found
-                    _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
-                }
+                _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));
-
-                return View(model);
-            }
-            catch (Exception exc)
-            {
-                _notificationService.ErrorNotification(exc);
-            }
-
-            //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
-
-            //if we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        [HttpPost, ActionName("Edit")]
-        [FormValueRequired("send-mass-email")]
-        public virtual IActionResult SendMassEmail(CampaignModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
-            //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(model.Id);
-            if (campaign == null)
-                return RedirectToAction("List");
-
-            //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign);
-
-            try
-            {
-                var emailAccount = GetEmailAccount(model.EmailAccountId);
-
-                //subscribers of certain store?
-                var storeId = _storeService.GetStoreById(campaign.StoreId)?.Id ?? 0;
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
-                    customerRoleId: model.CustomerRoleId,
-                    isActive: true);
-                var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
-
-                _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
 
                 return View(model);
             }

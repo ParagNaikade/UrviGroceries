@@ -28,8 +28,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             AvailableStates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             CustomerAttributes = new List<CustomerAttributeModel>();
-            AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
-            SelectedNewsletterSubscriptionStoreIds = new List<int>();
             AddRewardPoints = new AddRewardPointsToCustomerModel();
             CustomerRewardPointsSearchModel = new CustomerRewardPointsSearchModel();
             CustomerAddressSearchModel = new CustomerAddressSearchModel();
@@ -203,13 +201,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
 
-        //newsletter subscriptions (per store)
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
-        public IList<SelectListItem> AvailableNewsletterSubscriptionStores { get; set; }
-
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
-        public IList<int> SelectedNewsletterSubscriptionStoreIds { get; set; }
-
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
 
@@ -232,9 +223,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         //re-send the activation message
         public bool AllowReSendingOfActivationMessage { get; set; }
 
-        //GDPR enabled
-        public bool GdprEnabled { get; set; }
-        
         public string AvatarUrl { get; internal set; }
 
         public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }

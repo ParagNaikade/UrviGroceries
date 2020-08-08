@@ -15,7 +15,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -5634,22 +5633,6 @@ namespace Nop.Services.Installation
                 },
                 new MessageTemplate
                 {
-                    Name = MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage,
-                    Subject = "%Store.Name%. Subscription activation message.",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%NewsLetterSubscription.ActivationUrl%\">Click here to confirm your subscription to our list.</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}If you received this email by mistake, simply delete it.{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                },
-                new MessageTemplate
-                {
-                    Name = MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage,
-                    Subject = "%Store.Name%. Subscription deactivation message.",
-                    Body = $"<p>{Environment.NewLine}<a href=\"%NewsLetterSubscription.DeactivationUrl%\">Click here to unsubscribe from our newsletter.</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}If you received this email by mistake, simply delete it.{Environment.NewLine}</p>{Environment.NewLine}",
-                    IsActive = true,
-                    EmailAccountId = eaGeneral.Id
-                },
-                new MessageTemplate
-                {
                     Name = MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification,
                     Subject = "%Store.Name%. New VAT number is submitted.",
                     Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:{Environment.NewLine}<br />{Environment.NewLine}VAT number: %Customer.VatNumber%{Environment.NewLine}<br />{Environment.NewLine}VAT number status: %Customer.VatNumberStatus%{Environment.NewLine}<br />{Environment.NewLine}Received name: %VatValidationResult.Name%{Environment.NewLine}<br />{Environment.NewLine}Received address: %VatValidationResult.Address%{Environment.NewLine}</p>{Environment.NewLine}",
@@ -6166,7 +6149,6 @@ namespace Nop.Services.Installation
                     "onepagecheckout",
                     "contactus",
                     "passwordrecovery",
-                    "subscribenewsletter",
                     "blog",
                     "boards",
                     "inboxupdate",
@@ -6224,14 +6206,6 @@ namespace Nop.Services.Installation
                 Dimensions = true,
                 ProductAttributes = true,
                 SpecificationAttributes = true
-            });
-
-            settingService.SaveSetting(new GdprSettings
-            {
-                GdprEnabled = false,
-                LogPrivacyPolicyConsent = true,
-                LogNewsletterConsent = true,
-                LogUserProfileChanges = true
             });
 
             settingService.SaveSetting(new CatalogSettings
@@ -6383,10 +6357,6 @@ namespace Nop.Services.Installation
                 PhoneEnabled = false,
                 FaxEnabled = false,
                 AcceptPrivacyPolicyEnabled = false,
-                NewsletterEnabled = true,
-                NewsletterTickedByDefault = true,
-                HideNewsletterBlock = false,
-                NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
                 StoreIpAddresses = true,

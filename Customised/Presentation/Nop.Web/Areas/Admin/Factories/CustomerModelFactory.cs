@@ -9,7 +9,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
@@ -19,7 +18,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -47,7 +45,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly AddressSettings _addressSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
-        private readonly GdprSettings _gdprSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
@@ -63,11 +60,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
@@ -90,7 +85,6 @@ namespace Nop.Web.Areas.Admin.Factories
         public CustomerModelFactory(AddressSettings addressSettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
-            GdprSettings gdprSettings,
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
@@ -106,11 +100,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
-            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILocalizationService localizationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
@@ -129,7 +121,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
-            _gdprSettings = gdprSettings;
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressAttributeFormatter = addressAttributeFormatter;
@@ -145,11 +136,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _externalAuthenticationService = externalAuthenticationService;
-            _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
             _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
@@ -691,7 +680,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
                 model.AllowReSendingOfActivationMessage = _customerService.IsRegistered(customer) && !customer.Active &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
-                model.GdprEnabled = _gdprSettings.GdprEnabled;
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -736,14 +724,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     {
                         model.AffiliateId = affiliate.Id;
                         model.AffiliateName = _affiliateService.GetAffiliateFullName(affiliate);
-                    }
-
-                    //prepare model newsletter subscriptions
-                    if (!string.IsNullOrEmpty(customer.Email))
-                    {
-                        model.SelectedNewsletterSubscriptionStoreIds = _storeService.GetAllStores()
-                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id) != null)
-                            .Select(store => store.Id).ToList();
                     }
                 }
                 //prepare reward points model
@@ -802,14 +782,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model customer attributes
             PrepareCustomerAttributeModels(model.CustomerAttributes, customer);
-
-            //prepare model stores for newsletter subscriptions
-            model.AvailableNewsletterSubscriptionStores = _storeService.GetAllStores().Select(store => new SelectListItem
-            {
-                Value = store.Id.ToString(),
-                Text = store.Name,
-                Selected = model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id)
-            }).ToList();
 
             //prepare model customer roles
             _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
@@ -1172,77 +1144,6 @@ namespace Nop.Web.Areas.Admin.Factories
                         : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;
-                });
-            });
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare GDPR request (log) search model
-        /// </summary>
-        /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request search model</returns>
-        public virtual GdprLogSearchModel PrepareGdprLogSearchModel(GdprLogSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare request types
-            _baseAdminModelFactory.PrepareGdprRequestTypes(searchModel.AvailableRequestTypes);
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        /// <summary>
-        /// Prepare paged GDPR request list model
-        /// </summary>
-        /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request list model</returns>
-        public virtual GdprLogListModel PrepareGdprLogListModel(GdprLogSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            var customerId = 0;
-            var customerInfo = "";
-            if (!string.IsNullOrEmpty(searchModel.SearchEmail))
-            {
-                var customer = _customerService.GetCustomerByEmail(searchModel.SearchEmail);
-                if (customer != null)
-                    customerId = customer.Id;
-                else
-                {
-                    customerInfo = searchModel.SearchEmail;
-                }
-            }
-            //get requests
-            var gdprLog = _gdprService.GetAllLog(
-                customerId: customerId,
-                customerInfo: customerInfo,
-                requestType: searchModel.SearchRequestTypeId > 0 ? (GdprRequestType?)searchModel.SearchRequestTypeId : null,
-                pageIndex: searchModel.Page - 1,
-                pageSize: searchModel.PageSize);
-
-            //prepare list model
-            var model = new GdprLogListModel().PrepareToGrid(searchModel, gdprLog, () =>
-            {
-                return gdprLog.Select(log =>
-                {
-                    //fill in model values from the entity
-                    var customer = _customerService.GetCustomerById(log.CustomerId);
-
-                    var requestModel = log.ToModel<GdprLogModel>();
-
-                    //fill in additional values (not existing in the entity)
-                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
-                    requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType);
-                    requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
-
-                    return requestModel;
                 });
             });
 

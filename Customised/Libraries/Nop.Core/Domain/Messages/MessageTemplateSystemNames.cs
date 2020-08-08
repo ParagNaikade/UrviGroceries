@@ -128,20 +128,6 @@ namespace Nop.Core.Domain.Messages
 
         #endregion
 
-        #region Newsletter
-
-        /// <summary>
-        /// Represents system name of subscription activation message
-        /// </summary>
-        public const string NewsletterSubscriptionActivationMessage = "NewsLetterSubscription.ActivationMessage";
-
-        /// <summary>
-        /// Represents system name of subscription deactivation message
-        /// </summary>
-        public const string NewsletterSubscriptionDeactivationMessage = "NewsLetterSubscription.DeactivationMessage";
-
-        #endregion
-
         #region To friend
 
         /// <summary>

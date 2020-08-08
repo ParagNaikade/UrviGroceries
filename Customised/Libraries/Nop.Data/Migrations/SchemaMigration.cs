@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -172,9 +171,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<ForumPostVote>(Create);
             _migrationManager.BuildTable<ForumSubscription>(Create);
 
-            _migrationManager.BuildTable<GdprConsent>(Create);
-            _migrationManager.BuildTable<GdprLog>(Create);
-
             _migrationManager.BuildTable<ActivityLogType>(Create);
             _migrationManager.BuildTable<ActivityLog>(Create);
             _migrationManager.BuildTable<Log>(Create);
@@ -182,7 +178,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<Campaign>(Create);
             _migrationManager.BuildTable<EmailAccount>(Create);
             _migrationManager.BuildTable<MessageTemplate>(Create);
-            _migrationManager.BuildTable<NewsLetterSubscription>(Create);
             _migrationManager.BuildTable<QueuedEmail>(Create);
 
             _migrationManager.BuildTable<NewsItem>(Create);

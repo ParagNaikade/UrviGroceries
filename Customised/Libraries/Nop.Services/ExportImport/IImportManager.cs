@@ -14,13 +14,6 @@ namespace Nop.Services.ExportImport
         void ImportProductsFromXlsx(Stream stream);
 
         /// <summary>
-        /// Import newsletter subscribers from TXT file
-        /// </summary>
-        /// <param name="stream">Stream</param>
-        /// <returns>Number of imported subscribers</returns>
-        int ImportNewsletterSubscribersFromTxt(Stream stream);
-
-        /// <summary>
         /// Import states from TXT file
         /// </summary>
         /// <param name="stream">Stream</param>

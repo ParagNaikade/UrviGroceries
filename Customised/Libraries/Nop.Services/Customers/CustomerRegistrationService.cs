@@ -25,7 +25,6 @@ namespace Nop.Services.Customers
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
@@ -42,7 +41,6 @@ namespace Nop.Services.Customers
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IRewardPointService rewardPointService,
             IStoreService storeService,
             IWorkContext workContext,
@@ -55,7 +53,6 @@ namespace Nop.Services.Customers
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _rewardPointService = rewardPointService;
             _storeService = storeService;
             _workContext = workContext;
@@ -407,18 +404,6 @@ namespace Nop.Services.Customers
 
                 if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                     return;
-
-                //update newsletter subscription (if required)
-                foreach (var store in _storeService.GetAllStores())
-                {
-                    var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
-
-                    if (subscriptionOld == null)
-                        continue;
-
-                    subscriptionOld.Email = newEmail;
-                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
-                }
             }
         }
 

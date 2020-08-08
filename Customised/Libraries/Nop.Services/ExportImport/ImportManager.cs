@@ -60,7 +60,6 @@ namespace Nop.Services.ExportImport
         private readonly ILogger _logger;
         private readonly IManufacturerService _manufacturerService;
         private readonly IMeasureService _measureService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INopFileProvider _fileProvider;
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeService _productAttributeService;
@@ -96,7 +95,6 @@ namespace Nop.Services.ExportImport
             ILogger logger,
             IManufacturerService manufacturerService,
             IMeasureService measureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             INopFileProvider fileProvider,
             IPictureService pictureService,
             IProductAttributeService productAttributeService,
@@ -129,7 +127,6 @@ namespace Nop.Services.ExportImport
             _logger = logger;
             _manufacturerService = manufacturerService;
             _measureService = measureService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _pictureService = pictureService;
             _productAttributeService = productAttributeService;
             _productService = productService;
@@ -1781,76 +1778,6 @@ namespace Nop.Services.ExportImport
 
             //activity log
             _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
-        }
-
-        /// <summary>
-        /// Import newsletter subscribers from TXT file
-        /// </summary>
-        /// <param name="stream">Stream</param>
-        /// <returns>Number of imported subscribers</returns>
-        public virtual int ImportNewsletterSubscribersFromTxt(Stream stream)
-        {
-            var count = 0;
-            using (var reader = new StreamReader(stream))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    var tmp = line.Split(',');
-
-                    string email;
-                    var isActive = true;
-                    var storeId = _storeContext.CurrentStore.Id;
-                    //parse
-                    if (tmp.Length == 1)
-                    {
-                        //"email" only
-                        email = tmp[0].Trim();
-                    }
-                    else if (tmp.Length == 2)
-                    {
-                        //"email" and "active" fields specified
-                        email = tmp[0].Trim();
-                        isActive = bool.Parse(tmp[1].Trim());
-                    }
-                    else if (tmp.Length == 3)
-                    {
-                        //"email" and "active" and "storeId" fields specified
-                        email = tmp[0].Trim();
-                        isActive = bool.Parse(tmp[1].Trim());
-                        storeId = int.Parse(tmp[2].Trim());
-                    }
-                    else
-                        throw new NopException("Wrong file format");
-
-                    //import
-                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
-                    if (subscription != null)
-                    {
-                        subscription.Email = email;
-                        subscription.Active = isActive;
-                        _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
-                    }
-                    else
-                    {
-                        subscription = new NewsLetterSubscription
-                        {
-                            Active = isActive,
-                            CreatedOnUtc = DateTime.UtcNow,
-                            Email = email,
-                            StoreId = storeId,
-                            NewsLetterSubscriptionGuid = Guid.NewGuid()
-                        };
-                        _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
-                    }
-
-                    count++;
-                }
-            }
-
-            return count;
         }
 
         /// <summary>

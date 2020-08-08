@@ -16,7 +16,6 @@ namespace Nop.Web.Models.Customer
             AvailableStates = new List<SelectListItem>();
             AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             CustomerAttributes = new List<CustomerAttributeModel>();
-            GdprConsents = new List<GdprConsentModel>();
         }
         
         [DataType(DataType.EmailAddress)]
@@ -122,10 +121,6 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
 
-        public bool NewsletterEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Newsletter")]
-        public bool Newsletter { get; set; }
-
         //preferences
         public bool SignatureEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Signature")]
@@ -150,8 +145,6 @@ namespace Nop.Web.Models.Customer
         public bool AllowCustomersToRemoveAssociations { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
-
-        public IList<GdprConsentModel> GdprConsents { get; set; }
 
         #region Nested classes
 

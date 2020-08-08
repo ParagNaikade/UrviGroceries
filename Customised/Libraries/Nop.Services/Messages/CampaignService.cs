@@ -133,59 +133,6 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Sends a campaign to specified emails
-        /// </summary>
-        /// <param name="campaign">Campaign</param>
-        /// <param name="emailAccount">Email account</param>
-        /// <param name="subscriptions">Subscriptions</param>
-        /// <returns>Total emails sent</returns>
-        public virtual int SendCampaign(Campaign campaign, EmailAccount emailAccount,
-            IEnumerable<NewsLetterSubscription> subscriptions)
-        {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
-
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
-
-            var totalEmailsSent = 0;
-
-            foreach (var subscription in subscriptions)
-            {
-                var customer = _customerService.GetCustomerByEmail(subscription.Email);
-                //ignore deleted or inactive customers when sending newsletter campaigns
-                if (customer != null && (!customer.Active || customer.Deleted))
-                    continue;
-
-                var tokens = new List<Token>();
-                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
-                _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
-                if (customer != null)
-                    _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
-                var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                var body = _tokenizer.Replace(campaign.Body, tokens, true);
-
-                var email = new QueuedEmail
-                {
-                    Priority = QueuedEmailPriority.Low,
-                    From = emailAccount.Email,
-                    FromName = emailAccount.DisplayName,
-                    To = subscription.Email,
-                    Subject = subject,
-                    Body = body,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    EmailAccountId = emailAccount.Id,
-                    DontSendBeforeDateUtc = campaign.DontSendBeforeDateUtc
-                };
-                _queuedEmailService.InsertQueuedEmail(email);
-                totalEmailsSent++;
-            }
-
-            return totalEmailsSent;
-        }
-
-        /// <summary>
         /// Sends a campaign to specified email
         /// </summary>
         /// <param name="campaign">Campaign</param>

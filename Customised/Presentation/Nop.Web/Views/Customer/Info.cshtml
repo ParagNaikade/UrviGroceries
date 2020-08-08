@@ -301,21 +301,13 @@
                     </div>
                 </div>
             }
-            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+            @if (Model.CustomerAttributes.Count > 0)
             {
                 <div class="fieldset">
                     <div class="title">
                         <strong>@T("Account.Options")</strong>
                     </div>
                     <div class="form-fields">
-                        @if (Model.NewsletterEnabled)
-                        {
-                            <div class="inputs">
-                                <label asp-for="Newsletter" asp-postfix=":"></label>
-                                <input asp-for="Newsletter" />
-                                <span asp-validation-for="Newsletter"></span>
-                            </div>
-                        }
                         @if (Model.CustomerAttributes.Count > 0)
                         {
                             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
@@ -420,40 +412,6 @@
                 </div>
             }
 
-            @if (Model.GdprConsents.Count > 0)
-            {
-                <div class="fieldset">
-                    <div class="title">
-                        <strong>@T("Account.UserAgreement")</strong>
-                    </div>
-                    <div class="form-fields">
-                        @foreach (var consent in Model.GdprConsents)
-                        {
-                            if (consent.IsRequired)
-                            {
-                                <script asp-location="Footer">
-                                    $(document).ready(function() {
-                                        $('#save-info-button').on('click', function() {
-                                            if ($('#consent@(consent.Id)').is(':checked')) {
-                                                    //do some stuff
-                                                    return true;
-                                                } else {
-                                                    //just show validation errors, don't post
-                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
-                                                    return false;
-                                                }
-                                            });
-                                    });
-                                </script>
-                            }
-                            <div class="inputs accept-consent">
-                                <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
-                                <label for="consent@(consent.Id)">@consent.Message</label>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
             <div class="buttons">
                 <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>

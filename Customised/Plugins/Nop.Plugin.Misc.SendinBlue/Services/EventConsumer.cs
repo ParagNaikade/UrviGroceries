@@ -13,8 +13,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
     /// Represents event consumer
     /// </summary>
     public class EventConsumer :
-        IConsumer<EmailUnsubscribedEvent>,
-        IConsumer<EmailSubscribedEvent>,
         IConsumer<EntityInsertedEvent<ShoppingCartItem>>,
         IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
         IConsumer<EntityDeletedEvent<ShoppingCartItem>>,
@@ -45,26 +43,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Handle the email unsubscribed event.
-        /// </summary>
-        /// <param name="eventMessage">The event message.</param>
-        public void HandleEvent(EmailUnsubscribedEvent eventMessage)
-        {
-            //unsubscribe contact
-            _sendinBlueEmailManager.Unsubscribe(eventMessage.Subscription);
-        }
-
-        /// <summary>
-        /// Handle the email subscribed event.
-        /// </summary>
-        /// <param name="eventMessage">The event message.</param>
-        public void HandleEvent(EmailSubscribedEvent eventMessage)
-        {
-            //subscribe contact
-            _sendinBlueEmailManager.Subscribe(eventMessage.Subscription);
-        }
 
         /// <summary>
         /// Handle the add shopping cart item event

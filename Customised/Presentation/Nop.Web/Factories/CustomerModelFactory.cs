@@ -7,7 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -18,7 +17,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -46,7 +44,6 @@ namespace Nop.Web.Factories
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICountryService _countryService;
@@ -55,10 +52,8 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
@@ -87,7 +82,6 @@ namespace Nop.Web.Factories
             DateTimeSettings dateTimeSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             ForumSettings forumSettings,
-            GdprSettings gdprSettings,
             IAddressModelFactory addressModelFactory,
             IAuthenticationPluginManager authenticationPluginManager,
             ICountryService countryService,
@@ -96,10 +90,8 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
-            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
             IProductService productService,
@@ -125,7 +117,6 @@ namespace Nop.Web.Factories
             _externalAuthenticationService = externalAuthenticationService;
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
             _addressModelFactory = addressModelFactory;
             _authenticationPluginManager = authenticationPluginManager;
             _countryService = countryService;
@@ -133,10 +124,8 @@ namespace Nop.Web.Factories
             _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
             _productService = productService;
@@ -154,25 +143,6 @@ namespace Nop.Web.Factories
             _vendorSettings = vendorSettings;
         }
 
-        #endregion
-
-        #region Utilities
-
-        protected virtual GdprConsentModel PrepareGdprConsentModel(GdprConsent consent, bool accepted)
-        {
-            if (consent == null)
-                throw new ArgumentNullException(nameof(consent));
-
-            var requiredMessage = _localizationService.GetLocalized(consent, x => x.RequiredMessage);
-            return new GdprConsentModel
-            {
-                Id = consent.Id,
-                Message = _localizationService.GetLocalized(consent, x => x.Message),
-                IsRequired = consent.IsRequired,
-                RequiredMessage = !string.IsNullOrEmpty(requiredMessage) ? requiredMessage : $"'{consent.Message}' is required",
-                Accepted = accepted
-            };
-        }
         #endregion
 
         #region Methods
@@ -319,10 +289,6 @@ namespace Nop.Web.Factories
                 model.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
                 model.Fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
 
-                //newsletter
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                model.Newsletter = newsletter != null && newsletter.Active;
-
                 model.Signature = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
@@ -408,7 +374,6 @@ namespace Nop.Web.Factories
             model.PhoneRequired = _customerSettings.PhoneRequired;
             model.FaxEnabled = _customerSettings.FaxEnabled;
             model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
@@ -440,17 +405,6 @@ namespace Nop.Web.Factories
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
-
-            //GDPR
-            if (_gdprSettings.GdprEnabled)
-            {
-                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
-                foreach (var consent in consents)
-                {
-                    var accepted = _gdprService.IsConsentAccepted(consent.Id, _workContext.CurrentCustomer.Id);
-                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, accepted.HasValue && accepted.Value));
-                }
-            }
 
             return model;
         }
@@ -502,7 +456,6 @@ namespace Nop.Web.Factories
             model.PhoneRequired = _customerSettings.PhoneRequired;
             model.FaxEnabled = _customerSettings.FaxEnabled;
             model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
             model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
@@ -510,11 +463,6 @@ namespace Nop.Web.Factories
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
             model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
-            if (setDefaultValues)
-            {
-                //enable newsletter by default
-                model.Newsletter = _customerSettings.NewsletterTickedByDefault;
-            }
 
             //countries and states
             if (_customerSettings.CountryEnabled)
@@ -562,16 +510,6 @@ namespace Nop.Web.Factories
             var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
-
-            //GDPR
-            if (_gdprSettings.GdprEnabled)
-            {
-                var consents = _gdprService.GetAllConsents().Where(consent => consent.DisplayDuringRegistration).ToList();
-                foreach (var consent in consents)
-                {
-                    model.GdprConsents.Add(PrepareGdprConsentModel(consent, false));
-                }
-            }
 
             return model;
         }
@@ -778,16 +716,6 @@ namespace Nop.Web.Factories
                     ItemClass = "customer-vendor-info"
                 });
             }
-            if (_gdprSettings.GdprEnabled)
-            {
-                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
-                {
-                    RouteName = "GdprTools",
-                    Title = _localizationService.GetResource("Account.Gdpr"),
-                    Tab = CustomerNavigationEnum.GdprTools,
-                    ItemClass = "customer-gdpr"
-                });
-            }
 
             if (_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance)
             {
@@ -914,16 +842,6 @@ namespace Nop.Web.Factories
                 _mediaSettings.AvatarPictureSize,
                 false);
 
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare the GDPR tools model
-        /// </summary>
-        /// <returns>GDPR tools model</returns>
-        public virtual GdprToolsModel PrepareGdprToolsModel()
-        {
-            var model = new GdprToolsModel();
             return model;
         }
 

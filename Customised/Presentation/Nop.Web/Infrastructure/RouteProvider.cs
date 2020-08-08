@@ -221,10 +221,6 @@ namespace Nop.Web.Infrastructure
                 pattern + "checkout/completed/{orderId:int}",
                 new { controller = "Checkout", action = "Completed" });
 
-            //subscribe newsletters
-            endpointRouteBuilder.MapControllerRoute("SubscribeNewsletter", $"{pattern}subscribenewsletter",
-                new { controller = "Newsletter", action = "SubscribeNewsletter" });
-
             //email wishlist
             endpointRouteBuilder.MapControllerRoute("EmailWishlist", $"{pattern}emailwishlist",
                 new { controller = "ShoppingCart", action = "EmailWishlist" });
@@ -548,11 +544,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("DeletePM",
                 pattern + "deletepm/{privateMessageId:min(0)}",
                 new { controller = "PrivateMessages", action = "DeletePM" });
-
-            //activate newsletters
-            endpointRouteBuilder.MapControllerRoute("NewsletterActivation",
-                pattern + "newsletter/subscriptionactivation/{token:guid}/{active}",
-                new { controller = "Newsletter", action = "SubscriptionActivation" });
 
             //robots.txt
             endpointRouteBuilder.MapControllerRoute("robots.txt", $"{pattern}robots.txt",

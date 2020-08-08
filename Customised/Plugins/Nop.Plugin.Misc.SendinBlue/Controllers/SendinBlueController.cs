@@ -249,58 +249,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("saveSync")]
-        public IActionResult SaveSynchronization(ConfigurationModel model)
-        {
-            if (!ModelState.IsValid)
-                return Configure();
-
-            var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
-
-            //create webhook for the unsubscribe event
-            sendinBlueSettings.UnsubscribeWebhookId = _sendinBlueEmailManager.GetUnsubscribeWebHookId();
-            _settingService.SaveSetting(sendinBlueSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
-
-            //set list of contacts to synchronize
-            sendinBlueSettings.ListId = model.ListId;
-            _settingService.SaveSettingOverridablePerStore(sendinBlueSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
-
-            //now clear settings cache
-            _settingService.ClearCache();
-
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-
-            return Configure();
-        }
-
-        [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("sync")]
-        public IActionResult Synchronization(ConfigurationModel model)
-        {
-            if (!ModelState.IsValid)
-                return Configure();
-
-            //synchronize contacts of selected store
-            var messages = _sendinBlueEmailManager.Synchronize(false, _storeContext.ActiveStoreScopeConfiguration);
-            foreach (var message in messages)
-            {
-                _notificationService.Notification(message.Type, message.Message, false);
-            }
-            if (!messages.Any(message => message.Type == NotifyType.Error))
-            {
-                ViewData["synchronizationStart"] = true;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Misc.SendinBlue.ImportProcess"));
-            }
-
-            return Configure();
-        }
-
-        [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
         public string GetSynchronizationInfo()
         {
             var res = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => string.Empty);
@@ -637,22 +585,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             {
                 _logger.Error(ex.Message, ex);
                 _staticCacheManager.Set(_cacheKeyService.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), ex.Message);
-            }
-
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult UnsubscribeWebHook()
-        {
-            try
-            {
-                using var streamReader = new StreamReader(Request.Body);
-                _sendinBlueEmailManager.UnsubscribeWebhook(streamReader.ReadToEnd());
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message, ex);
             }
 
             return Ok();

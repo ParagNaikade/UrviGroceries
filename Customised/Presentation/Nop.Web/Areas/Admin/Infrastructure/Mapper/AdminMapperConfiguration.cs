@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
@@ -83,7 +82,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateDirectoryMaps();
             CreateDiscountsMaps();
             CreateForumsMaps();
-            CreateGdprMaps();
             CreateLocalizationMaps();
             CreateLoggingMaps();
             CreateMediaMaps();
@@ -764,8 +762,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.VatNumberStatusNote, options => options.Ignore())
                 .ForMember(model => model.DisplayVatNumber, options => options.Ignore())
                 .ForMember(model => model.LastVisitedPage, options => options.Ignore())
-                .ForMember(model => model.AvailableNewsletterSubscriptionStores, options => options.Ignore())
-                .ForMember(model => model.SelectedNewsletterSubscriptionStoreIds, options => options.Ignore())
                 .ForMember(model => model.DisplayRewardPointsHistory, options => options.Ignore())
                 .ForMember(model => model.AddRewardPoints, options => options.Ignore())
                 .ForMember(model => model.CustomerRewardPointsSearchModel, options => options.Ignore())
@@ -774,7 +770,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowSendingOfPrivateMessage, options => options.Ignore())
                 .ForMember(model => model.AllowSendingOfWelcomeMessage, options => options.Ignore())
                 .ForMember(model => model.AllowReSendingOfActivationMessage, options => options.Ignore())
-                .ForMember(model => model.GdprEnabled, options => options.Ignore())
                 .ForMember(model => model.CustomerAssociatedExternalAuthRecordsSearchModel, options => options.Ignore())
                 .ForMember(model => model.CustomerAddressSearchModel, options => options.Ignore())
                 .ForMember(model => model.CustomerOrderSearchModel, options => options.Ignore())
@@ -943,28 +938,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create GDPR maps 
-        /// </summary>
-        protected virtual void CreateGdprMaps()
-        {
-            CreateMap<GdprSettings, GdprSettingsModel>()
-                .ForMember(model => model.GdprConsentSearchModel, options => options.Ignore())
-                .ForMember(model => model.GdprEnabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogNewsletterConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogPrivacyPolicyConsent_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.LogUserProfileChanges_OverrideForStore, options => options.Ignore());
-            CreateMap<GdprSettingsModel, GdprSettings>();
-
-            CreateMap<GdprConsent, GdprConsentModel>();
-            CreateMap<GdprConsentModel, GdprConsent>();
-
-            CreateMap<GdprLog, GdprLogModel>()
-                .ForMember(model => model.CustomerInfo, options => options.Ignore())
-                .ForMember(model => model.RequestType, options => options.Ignore())
-                .ForMember(model => model.CreatedOn, options => options.Ignore());
-        }
-
-        /// <summary>
         /// Create localization maps 
         /// </summary>
         protected virtual void CreateLocalizationMaps()
@@ -1068,14 +1041,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.SendImmediately, options => options.Ignore());
             CreateMap<MessageTemplateModel, MessageTemplate>()
                 .ForMember(entity => entity.DelayPeriod, options => options.Ignore());
-
-            CreateMap<NewsLetterSubscription, NewsletterSubscriptionModel>()
-                .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.StoreName, options => options.Ignore());
-            CreateMap<NewsletterSubscriptionModel, NewsLetterSubscription>()
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.NewsLetterSubscriptionGuid, options => options.Ignore())
-                .ForMember(entity => entity.StoreId, options => options.Ignore());
 
             CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(model => model.CreatedOn, options => options.Ignore())

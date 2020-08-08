@@ -11,14 +11,12 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
-using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -44,7 +42,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -57,10 +54,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly IExportManager _exportManager;
         private readonly IForumService _forumService;
-        private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -80,7 +75,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             DateTimeSettings dateTimeSettings,
             EmailAccountSettings emailAccountSettings,
             ForumSettings forumSettings,
-            GdprSettings gdprSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressService addressService,
             ICustomerActivityService customerActivityService,
@@ -93,10 +87,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IEmailAccountService emailAccountService,
             IExportManager exportManager,
             IForumService forumService,
-            IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
             INotificationService notificationService,
             IPermissionService permissionService,
             IQueuedEmailService queuedEmailService,
@@ -112,7 +104,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _dateTimeSettings = dateTimeSettings;
             _emailAccountSettings = emailAccountSettings;
             _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
             _customerActivityService = customerActivityService;
@@ -125,10 +116,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _emailAccountService = emailAccountService;
             _exportManager = exportManager;
             _forumService = forumService;
-            _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _queuedEmailService = queuedEmailService;
@@ -399,41 +388,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //custom customer attributes
                 _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
-                //newsletter subscriptions
-                if (!string.IsNullOrEmpty(customer.Email))
-                {
-                    var allStores = _storeService.GetAllStores();
-                    foreach (var store in allStores)
-                    {
-                        var newsletterSubscription = _newsLetterSubscriptionService
-                            .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                        if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                            model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                        {
-                            //subscribed
-                            if (newsletterSubscription == null)
-                            {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                {
-                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.Email,
-                                    Active = true,
-                                    StoreId = store.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
-                                });
-                            }
-                        }
-                        else
-                        {
-                            //not subscribed
-                            if (newsletterSubscription != null)
-                            {
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
-                            }
-                        }
-                    }
-                }
-
                 //password
                 if (!string.IsNullOrWhiteSpace(model.Password))
                 {
@@ -648,41 +602,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //custom customer attributes
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
-                    //newsletter subscriptions
-                    if (!string.IsNullOrEmpty(customer.Email))
-                    {
-                        var allStores = _storeService.GetAllStores();
-                        foreach (var store in allStores)
-                        {
-                            var newsletterSubscription = _newsLetterSubscriptionService
-                                .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                            if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                                model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                            {
-                                //subscribed
-                                if (newsletterSubscription == null)
-                                {
-                                    _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                    {
-                                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                        Email = customer.Email,
-                                        Active = true,
-                                        StoreId = store.Id,
-                                        CreatedOnUtc = DateTime.UtcNow
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                //not subscribed
-                                if (newsletterSubscription != null)
-                                {
-                                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
-                                }
-                            }
-                        }
-                    }
-
                     var currentCustomerRoleIds = _customerService.GetCustomerRoleIds(customer, true);
 
                     //customer roles
@@ -879,14 +798,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //delete
                 _customerService.DeleteCustomer(customer);
-
-                //remove newsletter subscription (if exists)
-                foreach (var store in _storeService.GetAllStores())
-                {
-                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                    if (subscription != null)
-                        _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
-                }
 
                 //activity log
                 _customerActivityService.InsertActivity("DeleteCustomer",
@@ -1476,107 +1387,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        #endregion
-
-        #region GDPR
-
-        public virtual IActionResult GdprLog()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareGdprLogSearchModel(new GdprLogSearchModel());
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult GdprLogList(GdprLogSearchModel searchModel)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
-
-            //prepare model
-            var model = _customerModelFactory.PrepareGdprLogListModel(searchModel);
-
-            return Json(model);
-        }
-
-        [HttpPost]
-        public virtual IActionResult GdprDelete(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(id);
-            if (customer == null)
-                return RedirectToAction("List");
-
-            if (!_gdprSettings.GdprEnabled)
-                return RedirectToAction("List");
-
-            try
-            {
-                //prevent attempts to delete the user, if it is the last active administrator
-                if (_customerService.IsAdmin(customer) && !SecondAdminAccountExists(customer))
-                {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
-                    return RedirectToAction("Edit", new { id = customer.Id });
-                }
-
-                //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
-                {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
-                    return RedirectToAction("Edit", new { id = customer.Id });
-                }
-
-                //delete
-                _gdprService.PermanentDeleteCustomer(customer);
-
-                //activity log
-                _customerActivityService.InsertActivity("DeleteCustomer",
-                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id), customer);
-
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
-
-                return RedirectToAction("List");
-            }
-            catch (Exception exc)
-            {
-                _notificationService.ErrorNotification(exc.Message);
-                return RedirectToAction("Edit", new { id = customer.Id });
-            }
-        }
-
-        public virtual IActionResult GdprExport(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(id);
-            if (customer == null)
-                return RedirectToAction("List");
-
-            try
-            {
-                //log
-                //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
-                //export
-                //export
-                var bytes = _exportManager.ExportCustomerGdprInfoToXlsx(customer, _storeContext.CurrentStore.Id);
-
-                return File(bytes, MimeTypes.TextXlsx, $"customerdata-{customer.Id}.xlsx");
-            }
-            catch (Exception exc)
-            {
-                _notificationService.ErrorNotification(exc);
-                return RedirectToAction("Edit", new { id = customer.Id });
-            }
-        }
         #endregion
 
         #region Export / Import
