@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "name": "Toor Dal",
+        "description": "This is toor dal description",
+        "categoryId": 1,
+        "quantity": 5,
+        "price": 4,
+        "size": "1 Kg",
+        "brandId": 1,
+        "brand": null,
+        "category": null,
+        "allergenMaster": [],
+        "imageMaster": []
+    },
+    {
+        "id": 2,
+        "name": "Toor Dal",
+        "description": "This is toor dal description",
+        "categoryId": 1,
+        "quantity": 5,
+        "price": 20,
+        "size": "5 Kg",
+        "brandId": 1,
+        "brand": null,
+        "category": null,
+        "allergenMaster": [],
+        "imageMaster": []
+    },
+    {
+        "id": 3,
+        "name": "Moong Dal",
+        "description": "This is moong dal description",
+        "categoryId": 1,
+        "quantity": 5,
+        "price": 30,
+        "size": "5 Kg",
+        "brandId": 1,
+        "brand": null,
+        "category": null,
+        "allergenMaster": [],
+        "imageMaster": []
+    },
+    {
+        "id": 12,
+        "name": "Bajari",
+        "description": "This is Bajari description",
+        "categoryId": 4,
+        "quantity": 12,
+        "price": 7,
+        "size": "900 Gram",
+        "brandId": 1,
+        "brand": null,
+        "category": null,
+        "allergenMaster": [],
+        "imageMaster": []
+    },
+    {
+        "id": 13,
+        "name": "Ragi",
+        "description": "This is Ragi description",
+        "categoryId": 4,
+        "quantity": 4,
+        "price": 6,
+        "size": "450 Gram",
+        "brandId": 1,
+        "brand": null,
+        "category": null,
+        "allergenMaster": [],
+        "imageMaster": []
+    }
+]

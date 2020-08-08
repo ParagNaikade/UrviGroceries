@@ -9,20 +9,20 @@ function Home() {
       <div class="jumbotron">
         <h1 class="display-4">Urvi Groceries!</h1>
         <p class="lead">Welcome to Urvi, where even little of your contribution makes your grocery shopping a simpler, wasteless event..</p>
-        <hr class="my-4"/>
-          <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-          <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-          </p>
+        <hr class="my-4" />
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href=".\OurProducts" role="button" alt="Our Products!">Learn more</a>
+        </p>
       </div>
 
-         <Menubar/>
+      <Menubar /> 
 
-        {/* <ContactUs/> */}
+      {/* <ContactUs/> */}
 
-        <OurProducts />
+      {/* <OurProducts /> */}
 
-      </div>
+    </div>
   );
 }
 
