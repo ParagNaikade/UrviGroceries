@@ -363,9 +363,6 @@
   <LocaleResource Name="Account.Fields.LastName.Required">
     <Value>Last name is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Fields.Newsletter">
-    <Value>Newsletter</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
@@ -6072,12 +6069,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideDownloadableProductsTab.Hint">
     <Value>Check to hide 'Downloadable products' tab on 'My account' page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock">
-    <Value>Hide newsletter box</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock.Hint">
-    <Value>Check if you want to hide the newsletter subscription box.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled">
     <Value>'Last name' enabled</Value>
   </LocaleResource>
@@ -6089,24 +6080,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired.Hint">
     <Value>Check if 'Last name' is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
-    <Value>Newsletter box. Allow to unsubscribe</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe.Hint">
-    <Value>Check if you want to allow customers to display "unsubscribe" option in the newsletter block.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled">
-    <Value>'Newsletter' enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
-    <Value>Set if 'Newsletter' is enabled.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault">
-    <Value>Newsletter ticked by default</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
-    <Value>A value indicating whether 'Newsletter' checkbox is ticked by default on the registration page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
@@ -6455,99 +6428,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize.Hint">
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr">
-    <Value>GDPR settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Common">
-    <Value>Common</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.BlockTitle.Consents">
-    <Value>Consents</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Added">
-    <Value>The new consent has been added successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.AddNew">
-    <Value>Add consent</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.BackToList">
-    <Value>back to consent list</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Deleted">
-    <Value>The consent has been deleted successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration">
-    <Value>Display during registration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayDuringRegistration.Hint">
-    <Value>Check to display this consent on the registration page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage">
-    <Value>Display on 'customer info' page</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOnCustomerInfoPage.Hint">
-    <Value>Check to display this consent on the 'customer info' page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.DisplayOrder.Hint">
-    <Value>The consent display order. 1 represents the first item in the list.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Edit">
-    <Value>Edit consent</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired">
-    <Value>Is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.IsRequired.Hint">
-    <Value>Check if this consent is required to be ticked.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message">
-    <Value>Message</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Hint">
-    <Value>Enter message (question) displayed to customers.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Message.Required">
-    <Value>Please provide a message.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage">
-    <Value>Required message</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Hint">
-    <Value>Enter message (error) displayed when this consent is not ticked by a customer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Required">
-    <Value>Please provide a required message.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.Consent.Updated">
-    <Value>The GDPR consent has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled">
-    <Value>GDPR enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled.Hint">
-    <Value>Check to enable GDPR (General Data Protection Regulation).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent">
-    <Value>Log "newsletter" consent</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent.Hint">
-    <Value>Check to log "newsletter" consent (if this feature is enabled in your store).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent">
-    <Value>Log "accept privacy policy" consent</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent.Hint">
-    <Value>Check to log "accept privacy policy" consent (if this feature is enabled in your store).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges">
-    <Value>Log user profile changes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges.Hint">
-    <Value>Check to log user profile changes (if this feature is enabled in your store).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
@@ -12834,72 +12714,6 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Updated">
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
-    <Value>Newsletter subscribers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Active">
-    <Value>Active</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn">
-    <Value>Subscribed on</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email">
-    <Value>Email</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
-    <Value>Email is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess">
-    <Value>{0} emails have been successfully imported</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles">
-    <Value>Customer roles</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
-    <Value>Search by a specific customer role.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive">
-    <Value>Active</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly">
-    <Value>Active</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All">
-    <Value>All</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.Hint">
-    <Value>Search by a specific status e.g. Active.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly">
-    <Value>Not active</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail">
-    <Value>Email</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail.Hint">
-    <Value>Search by a specific email.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore.Hint">
-    <Value>Search by a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate.Hint">
-    <Value>The start date for the search.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>
   </LocaleResource>
@@ -16379,42 +16193,6 @@
   </LocaleResource>
   <LocaleResource Name="News.ViewAll">
     <Value>View News Archive</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Email.Placeholder">
-    <Value>Enter your email here...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Email.Wrong">
-    <Value>Enter valid email</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Options.Send">
-    <Value>Send</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Options.Subscribe">
-    <Value>Subscribe</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Options.Unsubscribe">
-    <Value>Unsubscribe</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.ResultActivated">
-    <Value>Your subscription has been activated.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.ResultAlreadyDeactivated">
-    <Value>Your subscription already has been deactivated.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.ResultDeactivated">
-    <Value>Your subscription has been deactivated.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Subscribe">
-    <Value>Sign up for our newsletter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.SubscribeEmailSent">
-    <Value>Thank you for signing up! A verification email has been sent. We appreciate your interest.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.Title">
-    <Value>Newsletter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Newsletter.UnsubscribeEmailSent">
-    <Value>A verification email has been sent. Thank you!</Value>
   </LocaleResource>
   <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
     <Value>The value is out of range. Maximum value is {0}.99</Value>

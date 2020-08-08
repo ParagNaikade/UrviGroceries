@@ -1418,7 +1418,7 @@ namespace Nop.Services.Messages
             var additionalTokens = new CampaignAdditionalTokensAddedEvent();
             _eventPublisher.Publish(additionalTokens);
 
-            var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens }).ToList();
+            var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.StoreTokens }).ToList();
             allowedTokens.AddRange(additionalTokens.AdditionalTokens);
 
             return allowedTokens.Distinct();

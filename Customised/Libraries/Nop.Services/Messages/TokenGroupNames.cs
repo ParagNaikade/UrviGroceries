@@ -41,11 +41,6 @@
         public const string RecurringPaymentTokens = "Recurring payment tokens";
 
         /// <summary>
-        /// Represents tokens with information about the newsletter subscription
-        /// </summary>
-        public const string SubscriptionTokens = "Newsletter subscription tokens";
-
-        /// <summary>
         /// Represents tokens with information about the product
         /// </summary>
         public const string ProductTokens = "Product tokens";
