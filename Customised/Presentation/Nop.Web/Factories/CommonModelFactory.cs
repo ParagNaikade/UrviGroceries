@@ -849,7 +849,6 @@ namespace Nop.Web.Factories
                     "/order/history",
                     "/orderdetails",
                     "/passwordrecovery/confirm",
-                    "/poll/vote",
                     "/privatemessages",
                     "/returnrequest",
                     "/returnrequest/history",

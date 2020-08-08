@@ -18,11 +18,6 @@ namespace Nop.Core.Domain.Common
         public int SitemapPageSize { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to include blog posts to sitemap
-        /// </summary>
-        public bool SitemapIncludeBlogPosts { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to include categories to sitemap
         /// </summary>
         public bool SitemapIncludeCategories { get; set; }
@@ -31,11 +26,6 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether to include manufacturers to sitemap
         /// </summary>
         public bool SitemapIncludeManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include news to sitemap
-        /// </summary>
-        public bool SitemapIncludeNews { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to include products to sitemap

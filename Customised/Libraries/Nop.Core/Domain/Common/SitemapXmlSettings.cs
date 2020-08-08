@@ -19,11 +19,6 @@ namespace Nop.Core.Domain.Common
         public bool SitemapXmlEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to include blog posts to sitemap.xml
-        /// </summary>
-        public bool SitemapXmlIncludeBlogPosts { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to include categories to sitemap.xml
         /// </summary>
         public bool SitemapXmlIncludeCategories { get; set; }
@@ -37,11 +32,6 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether to include manufacturers to sitemap.xml
         /// </summary>
         public bool SitemapXmlIncludeManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include news to sitemap.xml
-        /// </summary>
-        public bool SitemapXmlIncludeNews { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to include products to sitemap.xml

@@ -230,25 +230,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static string CartPicturePrefixCacheKey => "Nop.pres.cart.picture";
 
         /// <summary>
-        /// Key for home page polls
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : current store ID
-        /// </remarks>
-        public static CacheKey HomepagePollsModelKey => new CacheKey("Nop.pres.poll.homepage-{0}-{1}", PollsPrefixCacheKey);
-        /// <summary>
-        /// Key for polls by system name
-        /// </summary>
-        /// <remarks>
-        /// {0} : poll system name
-        /// {1} : language ID
-        /// {2} : current store ID
-        /// </remarks>
-        public static CacheKey PollBySystemNameModelKey => new CacheKey("Nop.pres.poll.systemname-{0}-{1}-{2}", PollsPrefixCacheKey);
-        public static string PollsPrefixCacheKey => "Nop.pres.poll";
-
-        /// <summary>
         /// Key for blog archive (years, months) block model
         /// </summary>
         /// <remarks>

@@ -6,7 +6,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
@@ -84,18 +83,7 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityDeletedEvent<ProductPicture>>,
         //Product review
         IConsumer<EntityDeletedEvent<ProductReview>>,
-        //polls
-        IConsumer<EntityInsertedEvent<Poll>>,
-        IConsumer<EntityUpdatedEvent<Poll>>,
-        IConsumer<EntityDeletedEvent<Poll>>,
-        //blog posts
-        IConsumer<EntityInsertedEvent<BlogPost>>,
-        IConsumer<EntityUpdatedEvent<BlogPost>>,
-        IConsumer<EntityDeletedEvent<BlogPost>>,
-        //news items
-        IConsumer<EntityInsertedEvent<NewsItem>>,
-        IConsumer<EntityUpdatedEvent<NewsItem>>,
-        IConsumer<EntityDeletedEvent<NewsItem>>,
+        
         //shopping cart items
         IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
         //plugins
@@ -494,69 +482,6 @@ namespace Nop.Web.Infrastructure.Cache
             _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Polls
-
-        public void HandleEvent(EntityInsertedEvent<Poll> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityUpdatedEvent<Poll> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<Poll> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Blog posts
-
-        public void HandleEvent(EntityInsertedEvent<BlogPost> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityUpdatedEvent<BlogPost> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<BlogPost> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region News items
-
-        public void HandleEvent(EntityInsertedEvent<NewsItem> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityUpdatedEvent<NewsItem> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<NewsItem> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion

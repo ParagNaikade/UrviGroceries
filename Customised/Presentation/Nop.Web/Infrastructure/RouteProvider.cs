@@ -387,10 +387,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CheckGiftCardBalance", $"{pattern}customer/checkgiftcardbalance",
                 new { controller = "Customer", action = "CheckGiftCardBalance" });
 
-            //poll vote AJAX link
-            endpointRouteBuilder.MapControllerRoute("PollVote", "poll/vote",
-                new { controller = "Poll", action = "Vote" });
-
             //comparing products
             endpointRouteBuilder.MapControllerRoute("RemoveProductFromCompareList",
                 pattern + "compareproducts/remove/{productId}",

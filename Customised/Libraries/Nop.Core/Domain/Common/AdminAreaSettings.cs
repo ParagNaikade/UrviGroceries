@@ -58,11 +58,6 @@ namespace Nop.Core.Domain.Common
         public bool CheckCopyrightRemovalKey { get; set; }
 
         /// <summary>
-        /// Gets or sets title of last news (admin area)
-        /// </summary>
-        public string LastNewsTitleAdminArea { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to use IsoDateFormat in JSON results (used for avoiding issue with dates in grids)
         /// </summary>
         public bool UseIsoDateFormatInJsonResult { get; set; }

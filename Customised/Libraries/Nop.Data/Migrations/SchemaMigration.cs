@@ -14,7 +14,6 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
@@ -182,10 +181,6 @@ namespace Nop.Data.Migrations
 
             _migrationManager.BuildTable<NewsItem>(Create);
             _migrationManager.BuildTable<NewsComment>(Create);
-
-            _migrationManager.BuildTable<Poll>(Create);
-            _migrationManager.BuildTable<PollAnswer>(Create);
-            _migrationManager.BuildTable<PollVotingRecord>(Create);
 
             _migrationManager.BuildTable<AclRecord>(Create);
             _migrationManager.BuildTable<PermissionRecord>(Create);

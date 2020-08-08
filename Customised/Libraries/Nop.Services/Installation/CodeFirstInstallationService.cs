@@ -22,7 +22,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
@@ -86,8 +85,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
@@ -153,8 +150,6 @@ namespace Nop.Services.Installation
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
-            IRepository<PollAnswer> pollAnswerRepository,
-            IRepository<Poll> pollRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
@@ -216,8 +211,6 @@ namespace Nop.Services.Installation
             _orderItemRepository = orderItemRepository;
             _orderNoteRepository = orderNoteRepository;
             _orderRepository = orderRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _pollRepository = pollRepository;
             _productAttributeRepository = productAttributeRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
@@ -11240,56 +11233,6 @@ namespace Nop.Services.Installation
             _newsItemRepository.Update(news);
         }
 
-        protected virtual void InstallPolls()
-        {
-            var defaultLanguage = _languageRepository.Table.FirstOrDefault();
-
-            if (defaultLanguage == null)
-                throw new Exception("Default language could not be loaded");
-
-            var poll1 = new Poll
-            {
-                LanguageId = defaultLanguage.Id,
-                Name = "Do you like nopCommerce?",
-                SystemKeyword = string.Empty,
-                Published = true,
-                ShowOnHomepage = true,
-                DisplayOrder = 1
-            };
-
-            _pollRepository.Insert(poll1);
-
-            var answers = new List<PollAnswer>()
-            {
-                new PollAnswer
-            {
-                Name = "Excellent",
-                DisplayOrder = 1,
-                PollId = poll1.Id
-            },
-                new PollAnswer
-            {
-                Name = "Good",
-                DisplayOrder = 2,
-                PollId = poll1.Id
-            },
-                new PollAnswer
-            {
-                Name = "Poor",
-                DisplayOrder = 3,
-                PollId = poll1.Id
-            },
-                new PollAnswer
-            {
-                Name = "Very bad",
-                DisplayOrder = 4,
-                PollId = poll1.Id
-            }
-            };
-
-            _pollAnswerRepository.Insert(answers);
-        }
-
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>
@@ -12560,7 +12503,6 @@ namespace Nop.Services.Installation
             InstallDiscounts();
             InstallBlogPosts(defaultUserEmail);
             InstallNews(defaultUserEmail);
-            InstallPolls();
             InstallWarehouses();
             InstallVendors();
             InstallAffiliates();

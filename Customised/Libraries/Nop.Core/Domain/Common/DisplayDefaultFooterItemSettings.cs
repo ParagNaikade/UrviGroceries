@@ -23,21 +23,6 @@ namespace Nop.Core.Domain.Common
         public bool DisplayProductSearchFooterItem { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to display "news" footer item
-        /// </summary>
-        public bool DisplayNewsFooterItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to display "blog" footer item
-        /// </summary>
-        public bool DisplayBlogFooterItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to display "forums" footer item
-        /// </summary>
-        public bool DisplayForumsFooterItem { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to display "recently viewed products" footer item
         /// </summary>
         public bool DisplayRecentlyViewedProductsFooterItem { get; set; }

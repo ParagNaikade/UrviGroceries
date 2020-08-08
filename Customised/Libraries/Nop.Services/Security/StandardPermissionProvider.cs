@@ -29,9 +29,6 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
         public static readonly PermissionRecord ManageDiscounts = new PermissionRecord { Name = "Admin area. Manage Discounts", SystemName = "ManageDiscounts", Category = "Promo" };
-        public static readonly PermissionRecord ManagePolls = new PermissionRecord { Name = "Admin area. Manage Polls", SystemName = "ManagePolls", Category = "Content Management" };
-        public static readonly PermissionRecord ManageNews = new PermissionRecord { Name = "Admin area. Manage News", SystemName = "ManageNews", Category = "Content Management" };
-        public static readonly PermissionRecord ManageBlog = new PermissionRecord { Name = "Admin area. Manage Blog", SystemName = "ManageBlog", Category = "Content Management" };
         public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = "ManageWidgets", Category = "Content Management" };
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
@@ -89,9 +86,6 @@ namespace Nop.Services.Security
                 ManageAffiliates,
                 ManageCampaigns,
                 ManageDiscounts,
-                ManagePolls,
-                ManageNews,
-                ManageBlog,
                 ManageWidgets,
                 ManageTopics,
                 ManageForums,
@@ -153,9 +147,6 @@ namespace Nop.Services.Security
                         ManageAffiliates,
                         ManageCampaigns,
                         ManageDiscounts,
-                        ManagePolls,
-                        ManageNews,
-                        ManageBlog,
                         ManageWidgets,
                         ManageTopics,
                         ManageForums,
