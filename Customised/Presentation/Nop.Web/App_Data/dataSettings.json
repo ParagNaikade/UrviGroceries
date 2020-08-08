@@ -1,5 +1,0 @@
-﻿{
-  "DataConnectionString": "Data Source=.\\sqlexpress;Initial Catalog=urvi_main;Integrated Security=False;Persist Security Info=False;User ID=flash;Password=flash123",
-  "DataProvider": "sqlserver",
-  "RawDataSettings": {}
-}
