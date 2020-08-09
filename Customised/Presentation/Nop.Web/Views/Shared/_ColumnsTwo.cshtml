@@ -50,7 +50,6 @@
         @await Component.InvokeAsync("VendorNavigation")
         @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
         @await Component.InvokeAsync("PopularProductTags")
-        @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
     }
 </div>

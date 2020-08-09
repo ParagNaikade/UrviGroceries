@@ -57,8 +57,6 @@
     @Html.NopCssFiles(ResourceLocation.Head)
     @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
     @*Insert favicon and app icons head code*@
     @await Component.InvokeAsync("Favicon")
     @if (displayMiniProfiler)
