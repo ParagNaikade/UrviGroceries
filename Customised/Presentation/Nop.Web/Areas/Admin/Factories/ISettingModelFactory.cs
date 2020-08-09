@@ -8,12 +8,6 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ISettingModelFactory
     {
         /// <summary>
-        /// Prepare blog settings model
-        /// </summary>
-        /// <returns>Blog settings model</returns>
-        BlogSettingsModel PrepareBlogSettingsModel();
-
-        /// <summary>
         /// Prepare vendor settings model
         /// </summary>
         /// <returns>Vendor settings model</returns>
@@ -24,12 +18,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Forum settings model</returns>
         ForumSettingsModel PrepareForumSettingsModel();
-
-        /// <summary>
-        /// Prepare news settings model
-        /// </summary>
-        /// <returns>News settings model</returns>
-        NewsSettingsModel PrepareNewsSettingsModel();
 
         /// <summary>
         /// Prepare shipping settings model

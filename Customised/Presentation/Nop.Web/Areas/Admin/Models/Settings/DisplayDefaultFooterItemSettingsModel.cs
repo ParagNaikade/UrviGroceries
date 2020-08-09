@@ -24,14 +24,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisplayProductSearchFooterItem { get; set; }
         public bool DisplayProductSearchFooterItem_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayNewsFooterItem")]
-        public bool DisplayNewsFooterItem { get; set; }
-        public bool DisplayNewsFooterItem_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayBlogFooterItem")]
-        public bool DisplayBlogFooterItem { get; set; }
-        public bool DisplayBlogFooterItem_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayDefaultFooterItemSettingsModel.DisplayForumsFooterItem")]
         public bool DisplayForumsFooterItem { get; set; }
         public bool DisplayForumsFooterItem_OverrideForStore { get; set; }

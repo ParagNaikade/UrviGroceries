@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
@@ -385,22 +383,6 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         IList<int> SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, int languageId);
-
-        /// <summary>
-        /// Sends a blog comment notification message to a store owner
-        /// </summary>
-        /// <param name="blogComment">Blog comment</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        IList<int> SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId);
-
-        /// <summary>
-        /// Sends a news comment notification message to a store owner
-        /// </summary>
-        /// <param name="newsComment">News comment</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        IList<int> SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId);
 
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer

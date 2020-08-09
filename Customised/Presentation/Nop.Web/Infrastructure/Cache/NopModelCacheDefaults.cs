@@ -230,26 +230,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static string CartPicturePrefixCacheKey => "Nop.pres.cart.picture";
 
         /// <summary>
-        /// Key for blog archive (years, months) block model
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : current store ID
-        /// </remarks>
-        public static CacheKey BlogMonthsModelKey => new CacheKey("Nop.pres.blog.months-{0}-{1}", BlogPrefixCacheKey);
-        public static string BlogPrefixCacheKey => "Nop.pres.blog";
-        
-        /// <summary>
-        /// Key for home page news
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : current store ID
-        /// </remarks>
-        public static CacheKey HomepageNewsModelKey => new CacheKey("Nop.pres.news.homepage-{0}-{1}", NewsPrefixCacheKey);
-        public static string NewsPrefixCacheKey => "Nop.pres.news";
-
-        /// <summary>
         /// Key for logo
         /// </summary>
         /// <remarks>

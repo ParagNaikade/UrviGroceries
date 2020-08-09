@@ -13,11 +13,5 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Dashboard model</param>
         /// <returns>Dashboard model</returns>
         DashboardModel PrepareDashboardModel(DashboardModel model);
-
-        /// <summary>
-        /// Prepare nopCommerce news model
-        /// </summary>
-        /// <returns>nopCommerce news model</returns>
-        NopCommerceNewsModel PrepareNopCommerceNewsModel();
     }
 }

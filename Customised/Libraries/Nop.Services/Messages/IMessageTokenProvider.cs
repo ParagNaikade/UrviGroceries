@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
@@ -107,20 +105,6 @@ namespace Nop.Services.Messages
         /// <param name="productReview">Product review</param>
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
 
-        /// <summary>
-        /// Add blog comment tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="blogComment">Blog post comment</param>
-        void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment);
-
-        /// <summary>
-        /// Add news comment tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="newsComment">News comment</param>
-        void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
-        
         /// <summary>
         /// Add product tokens
         /// </summary>

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Services.Blogs;
 using Nop.Services.Catalog;
-using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
@@ -14,10 +12,8 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly INewsService _newsService;
         private readonly IProductTagService _productTagService;
         private readonly IProductService _productService;
         private readonly ITopicService _topicService;
@@ -28,20 +24,17 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public BackwardCompatibility2XController(IBlogService blogService,
+        public BackwardCompatibility2XController(
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
-            INewsService newsService,
             IProductTagService productTagService,
             IProductService productService,
             ITopicService topicService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService)
         {
-            _blogService = blogService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
-            _newsService = newsService;
             _productTagService = productTagService;
             _productService = productService;
             _topicService = topicService;
@@ -81,26 +74,6 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) });
-        }
-
-        //in versions 2.00-2.70 we had ID in news URLs
-        public virtual IActionResult RedirectNewsItemById(int newsItemId)
-        {
-            var newsItem = _newsService.GetNewsById(newsItemId);
-            if (newsItem == null)
-                return RedirectToRoutePermanent("Homepage");
-
-            return RedirectToRoutePermanent("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
-        }
-
-        //in versions 2.00-2.70 we had ID in blog URLs
-        public virtual IActionResult RedirectBlogPostById(int blogPostId)
-        {
-            var blogPost = _blogService.GetBlogPostById(blogPostId);
-            if (blogPost == null)
-                return RedirectToRoutePermanent("Homepage");
-
-            return RedirectToRoutePermanent("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         //in versions 2.00-3.20 we had SystemName in topic URLs

@@ -9,17 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
-using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
-using Nop.Services.News;
 using Nop.Services.Topics;
 
 namespace Nop.Services.Seo
@@ -31,14 +27,11 @@ namespace Nop.Services.Seo
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ILanguageService _languageService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly INewsService _newsService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
@@ -47,21 +40,18 @@ namespace Nop.Services.Seo
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly NewsSettings _newsSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
 
         #region Ctor
 
-        public SitemapGenerator(BlogSettings blogSettings,
+        public SitemapGenerator(
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
-            IBlogService blogService,
             ICategoryService categoryService,
             ILanguageService languageService,
             IManufacturerService manufacturerService,
-            INewsService newsService,
             IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
@@ -70,17 +60,13 @@ namespace Nop.Services.Seo
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
-            NewsSettings newsSettings,
             SitemapXmlSettings sitemapSettings)
         {
-            _blogSettings = blogSettings;
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
-            _blogService = blogService;
             _categoryService = categoryService;
             _languageService = languageService;
             _manufacturerService = manufacturerService;
-            _newsService = newsService;
             _productService = productService;
             _productTagService = productTagService;
             _storeContext = storeContext;
@@ -89,7 +75,6 @@ namespace Nop.Services.Seo
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _localizationSettings = localizationSettings;
-            _newsSettings = newsSettings;
             _sitemapXmlSettings = sitemapSettings;
         }
 
@@ -191,18 +176,6 @@ namespace Nop.Services.Seo
                 GetLocalizedSitemapUrl("ContactUs")
             };
 
-            //news
-            if (_newsSettings.Enabled)
-                sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
-
-            //blog
-            if (_blogSettings.Enabled)
-                sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
-
-            //forum
-            if (_forumSettings.ForumsEnabled)
-                sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
-
             //categories
             if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
                 sitemapUrls.AddRange(GetCategoryUrls());
@@ -219,14 +192,6 @@ namespace Nop.Services.Seo
             if (_sitemapXmlSettings.SitemapXmlIncludeProductTags)
                 sitemapUrls.AddRange(GetProductTagUrls());
 
-            //news
-            if (_sitemapXmlSettings.SitemapXmlIncludeNews && _newsSettings.Enabled)
-                sitemapUrls.AddRange(GetNewsItemUrls());
-
-            //blog posts
-            if (_sitemapXmlSettings.SitemapXmlIncludeBlogPosts && _blogSettings.Enabled)
-                sitemapUrls.AddRange(GetBlogPostUrls());
-
             //topics
             if (_sitemapXmlSettings.SitemapXmlIncludeTopics)
                 sitemapUrls.AddRange(GetTopicUrls());
@@ -236,16 +201,6 @@ namespace Nop.Services.Seo
                 sitemapUrls.AddRange(GetCustomUrls());
 
             return sitemapUrls;
-        }
-
-        /// <summary>
-        /// Get news item URLs for the sitemap
-        /// </summary>
-        /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
-        {
-            return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
-                .Select(news => GetLocalizedSitemapUrl("NewsItem", GetSeoRouteParams(news), news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -297,17 +252,6 @@ namespace Nop.Services.Seo
         {
             return _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(t => t.IncludeInSitemap)
                 .Select(topic => GetLocalizedSitemapUrl("Topic", GetSeoRouteParams(topic)));
-        }
-
-        /// <summary>
-        /// Get blog post URLs for the sitemap
-        /// </summary>
-        /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetBlogPostUrls()
-        {
-            return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
-                .Where(p => p.IncludeInSitemap)
-                .Select(post => GetLocalizedSitemapUrl("BlogPost", GetSeoRouteParams(post)));
         }
 
         /// <summary>

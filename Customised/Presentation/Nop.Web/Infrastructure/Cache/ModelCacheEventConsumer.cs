@@ -1,10 +1,8 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -150,8 +148,6 @@ namespace Nop.Web.Infrastructure.Cache
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey); //depends on BlogSettings.NumberOfTags
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey); //depends on NewsSettings.MainPageNewsCount
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey); //depends on distinct sitemap settings
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.WidgetPrefixCacheKey); //depends on WidgetSettings and certain settings of widgets
             _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.StoreLogoPathPrefixCacheKey); //depends on StoreInformationSettings.LogoPictureId

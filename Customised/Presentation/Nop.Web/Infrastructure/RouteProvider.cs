@@ -111,18 +111,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("NewProducts", $"{pattern}newproducts/",
                 new { controller = "Product", action = "NewProducts" });
 
-            //blog
-            endpointRouteBuilder.MapControllerRoute("Blog", $"{pattern}blog",
-                new { controller = "Blog", action = "List" });
-
-            //news
-            endpointRouteBuilder.MapControllerRoute("NewsArchive", $"{pattern}news",
-                new { controller = "News", action = "List" });
-
-            //forum
-            endpointRouteBuilder.MapControllerRoute("Boards", $"{pattern}boards",
-                new { controller = "Boards", action = "Index" });
-
             //compare products
             endpointRouteBuilder.MapControllerRoute("CompareProducts", $"{pattern}compareproducts/",
                 new { controller = "Product", action = "CompareProducts" });

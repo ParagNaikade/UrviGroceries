@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Nop.Core.Domain.Affiliates;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
@@ -12,7 +11,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -31,7 +29,6 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Affiliates;
-using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Areas.Admin.Models.Common;
@@ -43,7 +40,6 @@ using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Areas.Admin.Models.Messages;
-using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Payments;
 using Nop.Web.Areas.Admin.Models.Plugins;
@@ -72,7 +68,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             //create specific maps
             CreateAffiliatesMaps();
             CreateAuthenticationMaps();
-            CreateBlogsMaps();
             CreateCatalogMaps();
             CreateCmsMaps();
             CreateCommonMaps();
@@ -84,7 +79,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateLoggingMaps();
             CreateMediaMaps();
             CreateMessagesMaps();
-            CreateNewsMaps();
             CreateOrdersMaps();
             CreatePaymentsMaps();
             CreatePluginsMaps();
@@ -194,47 +188,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateAuthenticationMaps()
         {
             CreateMap<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
-        }
-
-        /// <summary>
-        /// Create blogs maps 
-        /// </summary>new
-        protected virtual void CreateBlogsMaps()
-        {
-            CreateMap<BlogComment, BlogCommentModel>()
-                .ForMember(model => model.BlogPostTitle, options => options.Ignore())
-                .ForMember(model => model.Comment, options => options.Ignore())
-                .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.CustomerInfo, options => options.Ignore())
-                .ForMember(model => model.StoreName, options => options.Ignore());
-
-            CreateMap<BlogCommentModel, BlogComment>()
-                .ForMember(entity => entity.CommentText, options => options.Ignore())
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.BlogPostId, options => options.Ignore())
-                .ForMember(entity => entity.CustomerId, options => options.Ignore())
-                .ForMember(entity => entity.StoreId, options => options.Ignore());
-
-            CreateMap<BlogPost, BlogPostModel>()
-                .ForMember(model => model.ApprovedComments, options => options.Ignore())
-                .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-                .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.LanguageName, options => options.Ignore())
-                .ForMember(model => model.NotApprovedComments, options => options.Ignore())
-                .ForMember(model => model.SeName, options => options.Ignore())
-                .ForMember(model => model.InitialBlogTags, options => options.Ignore());
-            CreateMap<BlogPostModel, BlogPost>()
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
-
-            CreateMap<BlogSettings, BlogSettingsModel>()
-                .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.BlogCommentsMustBeApproved_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NotifyAboutNewBlogComments_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NumberOfTags_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.PostsPageSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore());
-            CreateMap<BlogSettingsModel, BlogSettings>();
         }
 
         /// <summary>
@@ -1058,47 +1011,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create news maps 
-        /// </summary>
-        protected virtual void CreateNewsMaps()
-        {
-            CreateMap<NewsComment, NewsCommentModel>()
-                .ForMember(model => model.CustomerInfo, options => options.Ignore())
-                .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.CommentText, options => options.Ignore())
-                .ForMember(model => model.NewsItemTitle, options => options.Ignore())
-                .ForMember(model => model.StoreName, options => options.Ignore());
-            CreateMap<NewsCommentModel, NewsComment>()
-                .ForMember(entity => entity.CommentTitle, options => options.Ignore())
-                .ForMember(entity => entity.CommentText, options => options.Ignore())
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.NewsItemId, options => options.Ignore())
-                .ForMember(entity => entity.CustomerId, options => options.Ignore())
-                .ForMember(entity => entity.StoreId, options => options.Ignore());
-
-            CreateMap<NewsItem, NewsItemModel>()
-                .ForMember(model => model.ApprovedComments, options => options.Ignore())
-                .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-                .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.LanguageName, options => options.Ignore())
-                .ForMember(model => model.NotApprovedComments, options => options.Ignore())
-                .ForMember(model => model.SeName, options => options.Ignore());
-            CreateMap<NewsItemModel, NewsItem>()
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
-
-            CreateMap<NewsSettings, NewsSettingsModel>()
-                .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.Enabled_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.MainPageNewsCount_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewsArchivePageSize_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NewsCommentsMustBeApproved_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.NotifyAboutNewNewsComments_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowHeaderRssUrl_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowNewsOnMainPage_OverrideForStore, options => options.Ignore());
-            CreateMap<NewsSettingsModel, NewsSettings>();
-        }
-
-        /// <summary>
         /// Create orders maps 
         /// </summary>
         protected virtual void CreateOrdersMaps()
@@ -1301,12 +1213,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ReCaptchaPrivateKey_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ReCaptchaPublicKey_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnApplyVendorPage_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowOnBlogCommentPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnContactUsPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnEmailProductToFriendPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnEmailWishlistToFriendPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnLoginPage_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())

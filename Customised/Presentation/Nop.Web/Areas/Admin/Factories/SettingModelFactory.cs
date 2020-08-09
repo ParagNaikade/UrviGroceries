@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -12,7 +11,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -336,9 +334,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 SitemapIncludeManufacturers = sitemapSettings.SitemapIncludeManufacturers,
                 SitemapIncludeProducts = sitemapSettings.SitemapIncludeProducts,
                 SitemapIncludeProductTags = sitemapSettings.SitemapIncludeProductTags,
-                SitemapIncludeBlogPosts = sitemapSettings.SitemapIncludeBlogPosts,
-                SitemapIncludeNews = sitemapSettings.SitemapIncludeNews,
-                SitemapIncludeTopics = sitemapSettings.SitemapIncludeTopics
             };
 
             if (storeId <= 0)
@@ -351,8 +346,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SitemapIncludeManufacturers_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeManufacturers, storeId);
             model.SitemapIncludeProducts_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeProducts, storeId);
             model.SitemapIncludeProductTags_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeProductTags, storeId);
-            model.SitemapIncludeBlogPosts_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeBlogPosts, storeId);
-            model.SitemapIncludeNews_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeNews, storeId);
             model.SitemapIncludeTopics_OverrideForStore = _settingService.SettingExists(sitemapSettings, x => x.SitemapIncludeTopics, storeId);
 
             return model;
@@ -489,12 +482,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ShowOnContactUsPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnContactUsPage, storeId);
             model.ShowOnEmailWishlistToFriendPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
             model.ShowOnEmailProductToFriendPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
-            model.ShowOnBlogCommentPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
-            model.ShowOnNewsCommentPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
             model.ShowOnProductReviewPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
             model.ShowOnApplyVendorPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
             model.ShowOnForgotPasswordPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
-            model.ShowOnForum_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnForum, storeId);
             model.ReCaptchaPublicKey_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
             model.ReCaptchaPrivateKey_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ReCaptchaPrivateKey, storeId);
             model.CaptchaType_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.CaptchaType, storeId);
@@ -626,8 +616,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 DisplayNewProductsMenuItem = displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
                 DisplayProductSearchMenuItem = displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
                 DisplayCustomerInfoMenuItem = displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
-                DisplayBlogMenuItem = displayDefaultMenuItemSettings.DisplayBlogMenuItem,
-                DisplayForumsMenuItem = displayDefaultMenuItemSettings.DisplayForumsMenuItem,
                 DisplayContactUsMenuItem = displayDefaultMenuItemSettings.DisplayContactUsMenuItem
             };
 
@@ -639,8 +627,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DisplayNewProductsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, storeId);
             model.DisplayProductSearchMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, storeId);
             model.DisplayCustomerInfoMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, storeId);
-            model.DisplayBlogMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayBlogMenuItem, storeId);
-            model.DisplayForumsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, storeId);
             model.DisplayContactUsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, storeId);
 
             return model;
@@ -662,9 +648,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 DisplaySitemapFooterItem = displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
                 DisplayContactUsFooterItem = displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
                 DisplayProductSearchFooterItem = displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-                DisplayNewsFooterItem = displayDefaultFooterItemSettings.DisplayNewsFooterItem,
-                DisplayBlogFooterItem = displayDefaultFooterItemSettings.DisplayBlogFooterItem,
-                DisplayForumsFooterItem = displayDefaultFooterItemSettings.DisplayForumsFooterItem,
                 DisplayRecentlyViewedProductsFooterItem = displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
                 DisplayCompareProductsFooterItem = displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
                 DisplayNewProductsFooterItem = displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
@@ -683,9 +666,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DisplaySitemapFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplaySitemapFooterItem, storeId);
             model.DisplayContactUsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayContactUsFooterItem, storeId);
             model.DisplayProductSearchFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayProductSearchFooterItem, storeId);
-            model.DisplayNewsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayNewsFooterItem, storeId);
-            model.DisplayBlogFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayBlogFooterItem, storeId);
-            model.DisplayForumsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayForumsFooterItem, storeId);
             model.DisplayRecentlyViewedProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayRecentlyViewedProductsFooterItem, storeId);
             model.DisplayCompareProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayCompareProductsFooterItem, storeId);
             model.DisplayNewProductsFooterItem_OverrideForStore = _settingService.SettingExists(displayDefaultFooterItemSettings, x => x.DisplayNewProductsFooterItem, storeId);
@@ -715,37 +695,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Prepare blog settings model
-        /// </summary>
-        /// <returns>Blog settings model</returns>
-        public virtual BlogSettingsModel PrepareBlogSettingsModel()
-        {
-            //load settings for a chosen store scope
-            var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var blogSettings = _settingService.LoadSetting<BlogSettings>(storeId);
-
-            //fill in model values from the entity
-            var model = blogSettings.ToSettingsModel<BlogSettingsModel>();
-
-            //fill in additional values (not existing in the entity)
-            model.ActiveStoreScopeConfiguration = storeId;
-
-            if (storeId <= 0)
-                return model;
-
-            //fill in overridden values
-            model.Enabled_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.Enabled, storeId);
-            model.PostsPageSize_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.PostsPageSize, storeId);
-            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-            model.NotifyAboutNewBlogComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NotifyAboutNewBlogComments, storeId);
-            model.NumberOfTags_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NumberOfTags, storeId);
-            model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowHeaderRssUrl, storeId);
-            model.BlogCommentsMustBeApproved_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.BlogCommentsMustBeApproved, storeId);
-
-            return model;
-        }
 
         /// <summary>
         /// Prepare vendor settings model
@@ -829,38 +778,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ForumFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedCount, storeId);
             model.SearchResultsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SearchResultsPageSize, storeId);
             model.ActiveDiscussionsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsPageSize, storeId);
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare news settings model
-        /// </summary>
-        /// <returns>News settings model</returns>
-        public virtual NewsSettingsModel PrepareNewsSettingsModel()
-        {
-            //load settings for a chosen store scope
-            var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var newsSettings = _settingService.LoadSetting<NewsSettings>(storeId);
-
-            //fill in model values from the entity
-            var model = newsSettings.ToSettingsModel<NewsSettingsModel>();
-
-            //fill in additional values (not existing in the entity)
-            model.ActiveStoreScopeConfiguration = storeId;
-
-            if (storeId <= 0)
-                return model;
-
-            //fill in overridden values
-            model.Enabled_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.Enabled, storeId);
-            model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeId);
-            model.NotifyAboutNewNewsComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.NotifyAboutNewNewsComments, storeId);
-            model.ShowNewsOnMainPage_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.ShowNewsOnMainPage, storeId);
-            model.MainPageNewsCount_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.MainPageNewsCount, storeId);
-            model.NewsArchivePageSize_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.NewsArchivePageSize, storeId);
-            model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.ShowHeaderRssUrl, storeId);
-            model.NewsCommentsMustBeApproved_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.NewsCommentsMustBeApproved, storeId);
 
             return model;
         }

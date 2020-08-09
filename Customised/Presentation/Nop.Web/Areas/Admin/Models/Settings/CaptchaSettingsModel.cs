@@ -37,14 +37,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnEmailProductToFriendPage { get; set; }
         public bool ShowOnEmailProductToFriendPage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage")]
-        public bool ShowOnBlogCommentPage { get; set; }
-        public bool ShowOnBlogCommentPage_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
-        public bool ShowOnNewsCommentPage { get; set; }
-        public bool ShowOnNewsCommentPage_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
         public bool ShowOnProductReviewPage { get; set; }
         public bool ShowOnProductReviewPage_OverrideForStore { get; set; }

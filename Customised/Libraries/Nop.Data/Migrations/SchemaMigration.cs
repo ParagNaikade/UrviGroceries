@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Affiliates;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
@@ -12,7 +11,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -111,9 +109,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<LocaleStringResource>(Create);
             _migrationManager.BuildTable<LocalizedProperty>(Create);
 
-            _migrationManager.BuildTable<BlogPost>(Create);
-            _migrationManager.BuildTable<BlogComment>(Create);
-
             _migrationManager.BuildTable<Category>(Create);
             _migrationManager.BuildTable<CategoryTemplate>(Create);
 
@@ -178,9 +173,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<EmailAccount>(Create);
             _migrationManager.BuildTable<MessageTemplate>(Create);
             _migrationManager.BuildTable<QueuedEmail>(Create);
-
-            _migrationManager.BuildTable<NewsItem>(Create);
-            _migrationManager.BuildTable<NewsComment>(Create);
 
             _migrationManager.BuildTable<AclRecord>(Create);
             _migrationManager.BuildTable<PermissionRecord>(Create);

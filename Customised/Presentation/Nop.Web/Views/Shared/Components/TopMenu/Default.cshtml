@@ -35,14 +35,6 @@
     {
         <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
     }
-    @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
-    {
-        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-    }
-    @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
-    {
-        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-    }
     @if (Model.DisplayContactUsMenuItem)
     {
         <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
@@ -88,14 +80,6 @@
         @if (Model.DisplayCustomerInfoMenuItem)
         {
             <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-        }
-        @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
-        {
-            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-        }
-        @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
-        {
-            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
         }
         @if (Model.DisplayContactUsMenuItem)
         {

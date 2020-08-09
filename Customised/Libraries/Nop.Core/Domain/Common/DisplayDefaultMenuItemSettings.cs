@@ -28,16 +28,6 @@ namespace Nop.Core.Domain.Common
         public bool DisplayCustomerInfoMenuItem { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to display "blog" menu item
-        /// </summary>
-        public bool DisplayBlogMenuItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to display "forums" menu item
-        /// </summary>
-        public bool DisplayForumsMenuItem { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to display "contact us" menu item
         /// </summary>
         public bool DisplayContactUsMenuItem { get; set; }

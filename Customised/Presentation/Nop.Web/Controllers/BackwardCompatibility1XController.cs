@@ -2,11 +2,9 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
-using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
 
@@ -18,12 +16,10 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
         private readonly IForumService _forumService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly INewsService _newsService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly ITopicService _topicService;
@@ -34,24 +30,21 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public BackwardCompatibility1XController(IBlogService blogService,
+        public BackwardCompatibility1XController(
             ICategoryService categoryService,
             ICustomerService customerService,
             IForumService forumService,
             IManufacturerService manufacturerService,
-            INewsService newsService,
             IProductService productService,
             IProductTagService productTagService,
             ITopicService topicService,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            _blogService = blogService;
             _categoryService = categoryService;
             _customerService = customerService;
             _forumService = forumService;
             _manufacturerService = manufacturerService;
-            _newsService = newsService;
             _productService = productService;
             _productTagService = productTagService;
             _topicService = topicService;
@@ -89,14 +82,6 @@ namespace Nop.Web.Controllers
                 case "producttag":
                     {
                         return RedirectProductTag(_webHelper.QueryString<string>("tagid"), false);
-                    }
-                case "news":
-                    {
-                        return RedirectNewsItem(_webHelper.QueryString<string>("newsid"), false);
-                    }
-                case "blog":
-                    {
-                        return RedirectBlogPost(_webHelper.QueryString<string>("blogpostid"), false);
                     }
                 case "topic":
                     {
@@ -204,28 +189,6 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("ProductsByTag", new { productTagId = tag.Id });
-        }
-
-        public virtual IActionResult RedirectNewsItem(string id, bool idIncludesSename = true)
-        {
-            //we can't use dash in MVC
-            var newsId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var newsItem = _newsService.GetNewsById(newsId);
-            if (newsItem == null)
-                return RedirectToRoutePermanent("Homepage");
-
-            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
-        }
-
-        public virtual IActionResult RedirectBlogPost(string id, bool idIncludesSename = true)
-        {
-            //we can't use dash in MVC
-            var blogPostId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var blogPost = _blogService.GetBlogPostById(blogPostId);
-            if (blogPost == null)
-                return RedirectToRoutePermanent("Homepage");
-
-            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public virtual IActionResult RedirectTopic(string id, bool idIncludesSename = true)

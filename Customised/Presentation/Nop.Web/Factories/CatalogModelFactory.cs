@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
@@ -41,7 +40,6 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
@@ -78,7 +76,7 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public CatalogModelFactory(BlogSettings blogSettings,
+        public CatalogModelFactory(
             CatalogSettings catalogSettings,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
@@ -111,7 +109,6 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            _blogSettings = blogSettings;
             _catalogSettings = catalogSettings;
             _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
             _forumSettings = forumSettings;
@@ -567,14 +564,10 @@ namespace Nop.Web.Factories
                 Categories = cachedCategoriesModel,
                 Topics = topicModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
-                BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumSettings.ForumsEnabled,
                 DisplayHomepageMenuItem = _displayDefaultMenuItemSettings.DisplayHomepageMenuItem,
                 DisplayNewProductsMenuItem = _displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
                 DisplayProductSearchMenuItem = _displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
                 DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
-                DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
-                DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
                 DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem,
                 UseAjaxMenu = _catalogSettings.UseAjaxLoadMenu
             };

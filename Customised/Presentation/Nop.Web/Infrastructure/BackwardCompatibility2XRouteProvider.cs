@@ -35,18 +35,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("", "m/{manufacturerId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById" });
 
-            //news
-            endpointRouteBuilder.MapControllerRoute("", "news/{newsItemId:min(0)}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById" });
-
-            //blog
-            endpointRouteBuilder.MapControllerRoute("", "blog/{blogPostId:min(0)}/{SeName?}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById" });
-
-            //topic
-            endpointRouteBuilder.MapControllerRoute("", "t/{SystemName}",
-                new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" });
-
             //vendors
             endpointRouteBuilder.MapControllerRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });

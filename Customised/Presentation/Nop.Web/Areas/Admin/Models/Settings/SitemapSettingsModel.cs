@@ -14,10 +14,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool SitemapEnabled { get; set; }
         public bool SitemapEnabled_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeBlogPosts")]
-        public bool SitemapIncludeBlogPosts { get; set; }
-        public bool SitemapIncludeBlogPosts_OverrideForStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeCategories")]
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeCategories_OverrideForStore { get; set; }

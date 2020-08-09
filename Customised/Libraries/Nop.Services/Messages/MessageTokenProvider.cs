@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -18,7 +17,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -27,7 +25,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
-using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -36,7 +33,6 @@ using Nop.Services.Events;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -58,7 +54,6 @@ namespace Nop.Services.Messages
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressService _addressService;
-        private readonly IBlogService _blogService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
@@ -69,7 +64,6 @@ namespace Nop.Services.Messages
         private readonly IGiftCardService _giftCardService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsService _newsService;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
@@ -100,7 +94,6 @@ namespace Nop.Services.Messages
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
             IAddressService addressService,
-            IBlogService blogService,
             ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerAttributeFormatter customerAttributeFormatter,
@@ -111,7 +104,6 @@ namespace Nop.Services.Messages
             IGiftCardService giftCardService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            INewsService newsService,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
@@ -136,7 +128,6 @@ namespace Nop.Services.Messages
             _actionContextAccessor = actionContextAccessor;
             _addressAttributeFormatter = addressAttributeFormatter;
             _addressService = addressService;
-            _blogService = blogService;
             _countryService = countryService;
             _currencyService = currencyService;
             _customerAttributeFormatter = customerAttributeFormatter;
@@ -147,7 +138,6 @@ namespace Nop.Services.Messages
             _giftCardService = giftCardService;
             _languageService = languageService;
             _localizationService = localizationService;
-            _newsService = newsService;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
@@ -1222,36 +1212,6 @@ namespace Nop.Services.Messages
 
             //event notification
             _eventPublisher.EntityTokensAdded(productReview, tokens);
-        }
-
-        /// <summary>
-        /// Add blog comment tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="blogComment">Blog post comment</param>
-        public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
-        {
-            var blogPost = _blogService.GetBlogPostById(blogComment.BlogPostId);
-
-            tokens.Add(new Token("BlogComment.BlogPostTitle", blogPost.Title));
-
-            //event notification
-            _eventPublisher.EntityTokensAdded(blogComment, tokens);
-        }
-
-        /// <summary>
-        /// Add news comment tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
-        /// <param name="newsComment">News comment</param>
-        public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
-        {
-            var newsItem = _newsService.GetNewsById(newsComment.NewsItemId);
-
-            tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
-
-            //event notification
-            _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
         /// <summary>

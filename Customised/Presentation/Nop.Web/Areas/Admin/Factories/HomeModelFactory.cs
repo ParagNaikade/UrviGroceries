@@ -78,69 +78,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
-        /// <summary>
-        /// Prepare nopCommerce news model
-        /// </summary>
-        /// <returns>nopCommerce news model</returns>
-        public virtual NopCommerceNewsModel PrepareNopCommerceNewsModel()
-        {
-            var model = new NopCommerceNewsModel
-            {
-                HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
-            };
-
-            try
-            {
-                //try to get news RSS feed
-                var rssData = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), () =>
-                {
-                    try
-                    {
-                        return _nopHttpClient.GetNewsRssAsync().Result;
-                    }
-                    catch (AggregateException exception)
-                    {
-                        //rethrow actual excepion
-                        throw exception.InnerException;
-                    }
-                });
-
-                for (var i = 0; i < rssData.Items.Count; i++)
-                {
-                    var item = rssData.Items.ElementAt(i);
-                    var newsItem = new NopCommerceNewsDetailsModel
-                    {
-                        Title = item.TitleText,
-                        Summary = item.ContentText,
-                        Url = item.Url.OriginalString,
-                        PublishDate = item.PublishDate
-                    };
-                    model.Items.Add(newsItem);
-
-                    //has new items?
-                    if (i != 0)
-                        continue;
-
-                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                    if (_adminAreaSettings.LastNewsTitleAdminArea == newsItem.Title)
-                        continue;
-
-                    _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                    _settingService.SaveSetting(_adminAreaSettings);
-
-                    //new item
-                    if (!firstRequest)
-                        model.HasNewItems = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("No access to the news. Website www.nopcommerce.com is not available.", ex);
-            }
-
-            return model;
-        }
-
         #endregion
     }
 }

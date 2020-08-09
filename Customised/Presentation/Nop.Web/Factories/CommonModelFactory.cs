@@ -10,19 +10,16 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
-using Nop.Services.Blogs;
 using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -31,7 +28,6 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -51,7 +47,6 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly BlogSettings _blogSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CommonSettings _commonSettings;
@@ -59,7 +54,6 @@ namespace Nop.Web.Factories
         private readonly DisplayDefaultFooterItemSettings _displayDefaultFooterItemSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IBlogService _blogService;
         private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
@@ -70,7 +64,6 @@ namespace Nop.Web.Factories
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly INewsService _newsService;
         private readonly INopFileProvider _fileProvider;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPermissionService _permissionService;
@@ -90,7 +83,6 @@ namespace Nop.Web.Factories
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly MediaSettings _mediaSettings;
-        private readonly NewsSettings _newsSettings;
         private readonly SitemapSettings _sitemapSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -100,7 +92,7 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public CommonModelFactory(BlogSettings blogSettings,
+        public CommonModelFactory(
             CaptchaSettings captchaSettings,
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
@@ -108,7 +100,6 @@ namespace Nop.Web.Factories
             DisplayDefaultFooterItemSettings displayDefaultFooterItemSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
-            IBlogService blogService,
             ICacheKeyService cacheKeyService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
@@ -119,7 +110,6 @@ namespace Nop.Web.Factories
             ILanguageService languageService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
-            INewsService newsService,
             INopFileProvider fileProvider,
             IPageHeadBuilder pageHeadBuilder,
             IPermissionService permissionService,
@@ -139,13 +129,11 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             MediaSettings mediaSettings,
-            NewsSettings newsSettings,
             SitemapSettings sitemapSettings,
             SitemapXmlSettings sitemapXmlSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
         {
-            _blogSettings = blogSettings;
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
@@ -153,7 +141,6 @@ namespace Nop.Web.Factories
             _displayDefaultFooterItemSettings = displayDefaultFooterItemSettings;
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
-            _blogService = blogService;
             _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _currencyService = currencyService;
@@ -164,7 +151,6 @@ namespace Nop.Web.Factories
             _languageService = languageService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
-            _newsService = newsService;
             _fileProvider = fileProvider;
             _pageHeadBuilder = pageHeadBuilder;
             _permissionService = permissionService;
@@ -184,7 +170,6 @@ namespace Nop.Web.Factories
             _workContext = workContext;
             _mediaSettings = mediaSettings;
             _localizationSettings = localizationSettings;
-            _newsSettings = newsSettings;
             _sitemapSettings = sitemapSettings;
             _sitemapXmlSettings = sitemapXmlSettings;
             _storeInformationSettings = storeInformationSettings;
@@ -408,7 +393,6 @@ namespace Nop.Web.Factories
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                NewsEnabled = _newsSettings.Enabled,
             };
 
             return model;
@@ -441,10 +425,7 @@ namespace Nop.Web.Factories
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _sitemapSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-                ForumEnabled = _forumSettings.ForumsEnabled,
-                NewsEnabled = _newsSettings.Enabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
@@ -455,9 +436,6 @@ namespace Nop.Web.Factories
                 DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
                 DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
                 DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
-                DisplayNewsFooterItem = _displayDefaultFooterItemSettings.DisplayNewsFooterItem,
-                DisplayBlogFooterItem = _displayDefaultFooterItemSettings.DisplayBlogFooterItem,
-                DisplayForumsFooterItem = _displayDefaultFooterItemSettings.DisplayForumsFooterItem,
                 DisplayRecentlyViewedProductsFooterItem = _displayDefaultFooterItemSettings.DisplayRecentlyViewedProductsFooterItem,
                 DisplayCompareProductsFooterItem = _displayDefaultFooterItemSettings.DisplayCompareProductsFooterItem,
                 DisplayNewProductsFooterItem = _displayDefaultFooterItemSettings.DisplayNewProductsFooterItem,
@@ -562,39 +540,6 @@ namespace Nop.Web.Factories
                     Url = urlHelper.RouteUrl("ProductSearch")
                 });
 
-                //news
-                if (_newsSettings.Enabled)
-                {
-                    model.Items.Add(new SitemapModel.SitemapItemModel
-                    {
-                        GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("News"),
-                        Url = urlHelper.RouteUrl("NewsArchive")
-                    });
-                }
-
-                //blog
-                if (_blogSettings.Enabled)
-                {
-                    model.Items.Add(new SitemapModel.SitemapItemModel
-                    {
-                        GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("Blog"),
-                        Url = urlHelper.RouteUrl("Blog")
-                    });
-                }
-
-                //forums
-                if (_forumSettings.ForumsEnabled)
-                {
-                    model.Items.Add(new SitemapModel.SitemapItemModel
-                    {
-                        GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("Forum.Forums"),
-                        Url = urlHelper.RouteUrl("Boards")
-                    });
-                }
-
                 //contact us
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
@@ -622,34 +567,6 @@ namespace Nop.Web.Factories
                         GroupTitle = commonGroupTitle,
                         Name = _localizationService.GetLocalized(topic, x => x.Title),
                         Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
-                    }));
-                }
-
-                //blog posts
-                if (_sitemapSettings.SitemapIncludeBlogPosts && _blogSettings.Enabled)
-                {
-                    var blogPostsGroupTitle = _localizationService.GetResource("Sitemap.BlogPosts");
-                    var blogPosts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id)
-                        .Where(p => p.IncludeInSitemap);
-
-                    model.Items.AddRange(blogPosts.Select(post => new SitemapModel.SitemapItemModel
-                    {
-                        GroupTitle = blogPostsGroupTitle,
-                        Name = post.Title,
-                        Url = urlHelper.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(post) })
-                    }));
-                }
-
-                //news
-                if (_sitemapSettings.SitemapIncludeNews && _newsSettings.Enabled)
-                {
-                    var newsGroupTitle = _localizationService.GetResource("Sitemap.News");
-                    var news = _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id);
-                    model.Items.AddRange(news.Select(newsItem => new SitemapModel.SitemapItemModel
-                    {
-                        GroupTitle = newsGroupTitle,
-                        Name = newsItem.Title,
-                        Url = urlHelper.RouteUrl("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem) })
                     }));
                 }
 

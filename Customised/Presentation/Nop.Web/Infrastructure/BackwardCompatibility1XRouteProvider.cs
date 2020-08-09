@@ -43,22 +43,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("", "producttag/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectProductTag" });
 
-            //news
-            endpointRouteBuilder.MapControllerRoute("", "news/{id}.aspx",
-                new { controller = "BackwardCompatibility1X", action = "RedirectNewsItem" });
-
-            //blog posts
-            endpointRouteBuilder.MapControllerRoute("", "blog/{id}.aspx",
-                new { controller = "BackwardCompatibility1X", action = "RedirectBlogPost" });
-
-            //topics
-            endpointRouteBuilder.MapControllerRoute("", "topic/{id}.aspx",
-                new { controller = "BackwardCompatibility1X", action = "RedirectTopic" });
-
-            //forums
-            endpointRouteBuilder.MapControllerRoute("", "boards/fg/{id}.aspx",
-                new { controller = "BackwardCompatibility1X", action = "RedirectForumGroup" });
-
             endpointRouteBuilder.MapControllerRoute("", "boards/f/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectForum" });
 

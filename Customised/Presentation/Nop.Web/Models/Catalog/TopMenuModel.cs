@@ -15,16 +15,12 @@ namespace Nop.Web.Models.Catalog
         public IList<CategorySimpleModel> Categories { get; set; }
         public IList<TopicModel> Topics { get; set; }
 
-        public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
-        public bool ForumEnabled { get; set; }
 
         public bool DisplayHomepageMenuItem { get; set; }
         public bool DisplayNewProductsMenuItem { get; set; }
         public bool DisplayProductSearchMenuItem { get; set; }
         public bool DisplayCustomerInfoMenuItem { get; set; }
-        public bool DisplayBlogMenuItem { get; set; }
-        public bool DisplayForumsMenuItem { get; set; }
         public bool DisplayContactUsMenuItem { get; set; }
 
         public bool UseAjaxMenu { get; set; }
@@ -35,8 +31,6 @@ namespace Nop.Web.Models.Catalog
                        && !(DisplayNewProductsMenuItem && NewProductsEnabled)
                        && !DisplayProductSearchMenuItem
                        && !DisplayCustomerInfoMenuItem
-                       && !(DisplayBlogMenuItem && BlogEnabled)
-                       && !(DisplayForumsMenuItem && ForumEnabled)
                        && !DisplayContactUsMenuItem;
 
         #region Nested classes

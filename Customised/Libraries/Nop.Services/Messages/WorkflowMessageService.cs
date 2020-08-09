@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Nop.Core;
-using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
@@ -1932,88 +1930,6 @@ namespace Nop.Services.Messages
                 var tokens = new List<Token>(commonTokens);
                 _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
 
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
-
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Sends a blog comment notification message to a store owner
-        /// </summary>
-        /// <param name="blogComment">Blog comment</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>List of queued email identifiers</returns>
-        public virtual IList<int> SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
-        {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
-
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.BlogCommentNotification, store.Id);
-            if (!messageTemplates.Any())
-                return new List<int>();
-
-            //tokens
-            var commonTokens = new List<Token>();
-            _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.CustomerId);
-
-            return messageTemplates.Select(messageTemplate =>
-            {
-                //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
-                var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-
-                //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-
-                var toEmail = emailAccount.Email;
-                var toName = emailAccount.DisplayName;
-
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Sends a news comment notification message to a store owner
-        /// </summary>
-        /// <param name="newsComment">News comment</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
-        {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
-
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
-
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewsCommentNotification, store.Id);
-            if (!messageTemplates.Any())
-                return new List<int>();
-
-            //tokens
-            var commonTokens = new List<Token>();
-            _messageTokenProvider.AddNewsCommentTokens(commonTokens, newsComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.CustomerId);
-
-            return messageTemplates.Select(messageTemplate =>
-            {
-                //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
-                var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-
-                //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
